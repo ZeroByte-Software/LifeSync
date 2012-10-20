@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="15"
         android:targetSdkVersion="15" />
 
     <application
@@ -13,12 +13,20 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_life_sync" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ScheduleActivity" />
+        <activity android:name=".LifeSync" />
+        <activity android:name=".BumpActivity" />
+        <activity
+            android:name=".AndroidTabLayoutActivity"
+            android:label="@string/title_activity_life_sync" >
         </activity>
     </application>
 

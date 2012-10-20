@@ -1,0 +1,16 @@
+<LINEARLAYOUT xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:orientation="horizontal" android:layout_width="fill_parent" 
+    android:layout_height="wrap_content">   
+ 
+   <TEXTVIEW android:layout_width="fill_parent" 
+		    android:layout_height="wrap_content" 
+	    	android:id="@+id/groupname" 
+	    	android:paddingLeft="30dp">
+
+	<IMAGEVIEW android:layout_width="20dp" 
+	    android:layout_height="20dp" 
+	    android:id="@+id/explist_indicator" 
+	    android:src="@drawable/expander_group">  
+	</IMAGEVIEW>	
+	</TEXTVIEW>
+</LINEARLAYOUT>  

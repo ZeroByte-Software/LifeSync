@@ -1,0 +1,7 @@
+<SELECTOR xmlns:android="http://schemas.android.com/apk/res/android">   
+    <ITEM android:state_expanded="true" 
+        android:drawable="@drawable/expander_max">   
+    <ITEM android:drawable="@drawable/expander_min">   
+	</ITEM>
+	</ITEM>
+</SELECTOR>  
