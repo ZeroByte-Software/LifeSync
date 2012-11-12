@@ -15,42 +15,49 @@
         android:id="@+id/mon_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/tue_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/wed_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/thu_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/fri_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/sat_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/sun_slot"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:focusable="false" />
 
 </LinearLayout>

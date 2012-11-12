@@ -9,33 +9,15 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
-        <!-- Username Label -->
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
-            android:gravity="left"
-            android:text="Username" />
-
-        <!-- Username TextField -->
+        <!-- Email TextField -->
 
         <EditText
             android:id="@+id/loginEmail"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <!-- Password Label -->
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:gravity="left"
-            android:text="Password" />
+            android:hint="Email" />
 
         <!-- Password TextField -->
 
@@ -44,20 +26,9 @@
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:password="true" />
-
-        <!-- Email Label -->
-
-
-        <!-- First Name Label -->
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:gravity="left"
-            android:text="First Name" />
+            android:hint="Password"
+            android:password="true" />
 
         <!-- First Name TextField -->
 
@@ -65,17 +36,9 @@
             android:id="@+id/loginEmail"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <!-- Last Name Label -->
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:gravity="left"
-            android:text="Last Name" />
+            android:hint="First Name" />
 
         <!-- Last Name TextField -->
 
@@ -83,33 +46,9 @@
             android:id="@+id/loginEmail"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <TextView
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:gravity="left"
-            android:text="Email" />
-
-        <!-- Email TextField -->
-
-        <EditText
-            android:id="@+id/loginEmail"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
-
-        <!-- Error message -->
-
-        <TextView
-            android:id="@+id/login_error"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:textColor="#e30000"
-            android:textStyle="bold" />
+            android:hint="Last Name" />
 
         <!-- Register Button -->
 
@@ -118,7 +57,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="40dp"
             android:text="Register" />
     </LinearLayout>
 

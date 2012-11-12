@@ -9,7 +9,7 @@ import android.app.ExpandableListActivity;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
-public class LifeSync extends ExpandableListActivity {
+public class FriendListActivity extends ExpandableListActivity {
 	private static final String NAME = "NAME";     
 	private static final String IS_EVEN = "IS_EVEN"; 
 	private SimpleExpandableListAdapter mAdapter;
@@ -18,7 +18,7 @@ public class LifeSync extends ExpandableListActivity {
     public void onCreate(Bundle savedInstanceState)   
     {   
         super.onCreate(savedInstanceState);   
-        setContentView(R.layout.activity_life_sync);   
+        setContentView(R.layout.activity_friend_list);   
         
         List<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
         List<List<Map<String, String>>> childData = new ArrayList<List<Map<String,String>>>();

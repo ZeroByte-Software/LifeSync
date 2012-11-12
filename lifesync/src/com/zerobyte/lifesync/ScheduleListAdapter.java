@@ -5,9 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -111,8 +113,17 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 			if (events_in_timeslot.get(i).isFilled_time_slot()) {
 				day_btn.setBackgroundColor(AndroidGreen);
 			} else {
-				day_btn.setBackgroundColor(AndroidBlue);
+				day_btn.setBackgroundColor(android.R.drawable.btn_default);
 			}
+			
+			day_btn.setOnClickListener(new OnClickListener() {
+		        public void onClick(View v) {
+		        	Intent displayEventIntent = new Intent(v.getContext(),
+							EventDisplayActivity.class);
+		        	((ScheduleActivity) v.getContext()).startActivity(displayEventIntent);
+		        }
+
+		    });
 
 		}
 

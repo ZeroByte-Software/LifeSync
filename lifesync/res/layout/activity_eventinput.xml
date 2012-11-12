@@ -9,7 +9,7 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
-        <!-- Email TextField -->
+        <!-- Name Field -->
 
         <EditText
             android:id="@+id/loginEmail"
@@ -17,44 +17,52 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Email"
+            android:hint="Name"
             android:textSize="20sp" />
 
-        <!-- Password TextField -->
+        <!-- StartTime Field -->
 
         <EditText
-            android:id="@+id/loginPassword"
+            android:id="@+id/loginEmail"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Password"
-            android:password="true"
+            android:hint="Start Time"
             android:textSize="20sp" />
 
-        <!-- Login Button -->
+        <!-- EndTime Field -->
 
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="200dp"
+        <EditText
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
-            android:text="Login"
+            android:layout_marginTop="15dp"
+            android:hint="End Time"
             android:textSize="20sp" />
 
-        <!-- Link to Registration Screen -->
+        <!-- Location Field -->
 
-        <Button
-            android:id="@+id/btnRegister"
-            android:layout_width="match_parent"
+        <EditText
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:background="@null"
-            android:text="No account? Register!"
-            android:textColor="#21dbd4"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:hint="Location "
+            android:textSize="20sp" />
+
+        <!-- Description Field -->
+
+        <EditText
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:hint="Description"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </ScrollView>

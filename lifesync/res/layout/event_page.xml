@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp" >
+
+        <!-- Name Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:gravity="left"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="EECE 419"
+            android:textSize="20sp" />
+
+        <!-- StartTime Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="left"
+            android:text="Start Time" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="2:00pm"
+            android:textSize="20sp" />
+
+        <!-- EndTime Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="left"
+            android:text="End Time" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="5:00pm"
+            android:textSize="20sp" />
+
+        <!-- Location Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="left"
+            android:text="Location" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Somewhere on 4th floor"
+            android:textSize="20sp" />
+
+        <!-- Description Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="left"
+            android:text="Description" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="This is the best course ever! Right guys? Right?"
+            android:textSize="20sp" />
+
+        <!-- Owner Field -->
+
+        <TextView
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:gravity="left"
+            android:text="Owner" />
+
+        <TextView
+            android:id="@+id/loginEmail"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Self"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</ScrollView>
