@@ -5,50 +5,50 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp" >
 
         <!-- Email TextField -->
 
         <EditText
-            android:id="@+id/loginEmail"
+            android:id="@+id/registerEmail"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Email" />
+            android:hint="@string/editTxtEmail" />
 
         <!-- Password TextField -->
 
         <EditText
-            android:id="@+id/loginPassword"
+            android:id="@+id/registerPassword"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Password"
-            android:password="true" />
+            android:hint="@string/editTxtPassword"
+            android:inputType="textPassword" />
 
         <!-- First Name TextField -->
 
         <EditText
-            android:id="@+id/loginEmail"
+            android:id="@+id/registerFirstName"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="First Name" />
+            android:hint="@string/editTxtFirstName" />
 
         <!-- Last Name TextField -->
 
         <EditText
-            android:id="@+id/loginEmail"
+            android:id="@+id/registerLastName"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Last Name" />
+            android:hint="@string/editTxtLastName" />
 
         <!-- Register Button -->
 
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:text="Register" />
+            android:text="@string/btnRegister" />
     </LinearLayout>
 
 </ScrollView>

@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp" >
 
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Email"
+            android:hint="@string/editTxtEmail"
             android:textSize="20sp" />
 
         <!-- Password TextField -->
@@ -28,8 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"
-            android:hint="Password"
-            android:password="true"
+            android:hint="@string/editTxtPassword"
+            android:inputType="textPassword"
             android:textSize="20sp" />
 
         <!-- Login Button -->
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
-            android:text="Login"
+            android:text="@string/btnLogin"
             android:textSize="20sp" />
 
         <!-- Link to Registration Screen -->
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@null"
-            android:text="No account? Register!"
+            android:text="@string/txtNoAccount"
             android:textColor="#21dbd4"
             android:textSize="20sp"
             android:textStyle="bold" />

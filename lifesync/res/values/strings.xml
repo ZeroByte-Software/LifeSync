@@ -4,6 +4,16 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_life_sync">LifeSync</string>
     <string name="title_activity_schedule">ScheduleActivity</string>
-    <string name="main_no_items">No items</string>   
+    <string name="main_no_items">No items</string>
+    <string name="editTxtEmail">Email</string>
+    <string name="editTxtPassword">Password</string>
+    <string name="btnLogin">Login</string>
+    <string name="txtNoAccount">No account? Register!</string>
+    <string name="editTxtFirstName">First Name</string>
+    <string name="editTxtLastName">Last Name</string>
+    <string name="btnRegister">Register</string>
+    <string name="dialogDuplicateEmail">Email already exists. Please login or use another email.</string>
+    <string name="ok">OK</string>
+    <string name="dialogAccountCreated">Your account has been created. You may now create a new schedule.</string>   
 
 </resources>

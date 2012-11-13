@@ -22,7 +22,9 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity {
-	final int HTTP_OK = 200;
+	final private int MAX_TIMEOUT = 5000;
+	final private int MAX_RETRIES = 1;
+	final private int HTTP_OK = 200;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,10 @@ public class LoginActivity extends Activity {
 				String email = editTxtEmail.getText().toString();
 				String password = editTxtPassword.getText().toString();
 				
-				login(email, password);
+				if( email.equals("") || password.equals("") )
+					showToast( "Please enter your email and password." );
+				else
+					login(email, password);
 			}
 		});
 		
@@ -56,13 +61,14 @@ public class LoginActivity extends Activity {
     /* 
      * Creates HTTP client and connects to web server to authenticate user
      */
-    void login( String email, String password )
+    private void login( String email, String password )
     {
     	AndroidHttpClient httpClient = new AndroidHttpClient( "http://192.168.1.10:8080/FBWebServer/android" );
     	ParameterMap params = httpClient.newParams();
     	
-    	httpClient.setConnectionTimeout( 5000 );
-    	httpClient.setMaxRetries( 1 );
+    	httpClient.setConnectionTimeout( MAX_TIMEOUT );
+    	httpClient.setReadTimeout( MAX_TIMEOUT );
+    	httpClient.setMaxRetries( MAX_RETRIES );
     	
     	params.add( "email", email );
     	params.add( "password", password );
@@ -95,7 +101,7 @@ public class LoginActivity extends Activity {
     /*
      * Displays a toast with a specified string
      */
-    void showToast( String text )
+    public void showToast( String text )
     {
     	Context context = getApplicationContext();
     	Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT);
