@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity {
+	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
 	final private int MAX_TIMEOUT = 5000;
 	final private int MAX_RETRIES = 1;
 	final private int HTTP_OK = 200;
@@ -63,7 +64,7 @@ public class LoginActivity extends Activity {
      */
     private void login( String email, String password )
     {
-    	AndroidHttpClient httpClient = new AndroidHttpClient( "http://192.168.1.10:8080/FBWebServer/android" );
+    	AndroidHttpClient httpClient = new AndroidHttpClient( SERVER_URL );
     	ParameterMap params = httpClient.newParams();
     	
     	httpClient.setConnectionTimeout( MAX_TIMEOUT );

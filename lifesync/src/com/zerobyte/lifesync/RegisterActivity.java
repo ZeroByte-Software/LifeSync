@@ -24,7 +24,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+
 public class RegisterActivity extends Activity {
+	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
 	final private int HTTP_CREATED = 201;
 	final private int HTTP_CONFLICT = 409;
 
@@ -58,7 +60,7 @@ public class RegisterActivity extends Activity {
 	
 	private void register( String email, String password, String fName, String lName )
 	{
-		AndroidHttpClient httpClient = new AndroidHttpClient( "http://192.168.1.10:8080/FBWebServer/android" );
+		AndroidHttpClient httpClient = new AndroidHttpClient( SERVER_URL );
     	ParameterMap params = httpClient.newParams();
     	
     	httpClient.setReadTimeout( 5000 );
