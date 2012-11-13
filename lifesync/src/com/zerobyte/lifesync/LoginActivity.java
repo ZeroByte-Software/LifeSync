@@ -1,3 +1,9 @@
+/* LoginActivity.java
+ * 
+ * Activity to handle user logins.
+ * 
+ */
+
 package com.zerobyte.lifesync;
 
 import com.turbomanage.httpclient.AsyncCallback;
@@ -17,13 +23,13 @@ import android.widget.Toast;
 
 public class LoginActivity extends Activity {
 	final int HTTP_OK = 200;
-	int STATUS;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         
+        // Allow properties of textbox to be used
         final EditText editTxtEmail = (EditText)findViewById(R.id.loginEmail);
         final EditText editTxtPassword = (EditText)findViewById(R.id.loginPassword);
 	  
@@ -33,25 +39,13 @@ public class LoginActivity extends Activity {
 				String email = editTxtEmail.getText().toString();
 				String password = editTxtPassword.getText().toString();
 				
-				Intent loginIntent = new Intent(LoginActivity.this,
-						AndroidTabLayoutActivity.class);
-				
-				if( isAuthenticated(email, password) )
-					startActivity(loginIntent);
-				else
-				{
-					Context context = getApplicationContext();
-					CharSequence text = "Incorrect email or password. Please try again.";
-					Toast loginFailedToast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
-					loginFailedToast.show();
-				}
+				login(email, password);
 			}
 		});
 		
 		Button registerButton = (Button) findViewById(R.id.btnRegister);
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
 				Intent registerIntent = new Intent(LoginActivity.this,
 						RegisterActivity.class);
 				startActivity(registerIntent);
@@ -59,32 +53,52 @@ public class LoginActivity extends Activity {
 		});
     }
     
-    boolean isAuthenticated( String email, String password )
+    /* 
+     * Creates HTTP client and connects to web server to authenticate user
+     */
+    void login( String email, String password )
     {
-    	AndroidHttpClient httpClient = new AndroidHttpClient( "http://54.245.83.84:8080/FBWebServer/android" );
+    	AndroidHttpClient httpClient = new AndroidHttpClient( "http://192.168.1.10:8080/FBWebServer/android" );
     	ParameterMap params = httpClient.newParams();
+    	
+    	httpClient.setConnectionTimeout( 5000 );
+    	httpClient.setMaxRetries( 1 );
     	
     	params.add( "email", email );
     	params.add( "password", password );
     	
+    	// Contact server using POST via seperate thread
     	httpClient.post( "/login", params, new AsyncCallback()
     	{
-
 			@Override
 			public void onComplete( HttpResponse httpResponse ) {
-				STATUS = httpResponse.getStatus();
+				int status = httpResponse.getStatus();
+				
+				if( status == HTTP_OK )
+				{
+					Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
+					startActivity(loginIntent);
+				}
+				else
+					showToast( "Incorrect email or password. Please try again." );
 			}
     		
 			@Override
 			public void onError( Exception e )
 			{
+				showToast( "Server error. Please try again." );
 				e.printStackTrace();
 			}
     	});
-    	
-    	if( STATUS == HTTP_OK )
-    		return true;
-    	else
-    		return false;
+    }
+    
+    /*
+     * Displays a toast with a specified string
+     */
+    void showToast( String text )
+    {
+    	Context context = getApplicationContext();
+    	Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT);
+    	toast.show();
     }
 }
