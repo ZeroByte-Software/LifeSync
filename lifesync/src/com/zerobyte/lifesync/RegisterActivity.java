@@ -56,6 +56,9 @@ public class RegisterActivity extends Activity {
 				// If any text boxes are empty...
 				if( email.equals("") || password.equals("") || fName.equals("") || lName.equals("") )
 					showToast( "Please enter your registration info." );
+				// If not valid email address...
+				else if( !email.contains("@") || !email.contains(".") )
+					showToast( "Please enter a valid email address.");
 				// If passwords do not match...
 				else if( !password.equals(passwordConfirm) )
 					showToast( "Passwords do not match. Please re-enter your password." );
