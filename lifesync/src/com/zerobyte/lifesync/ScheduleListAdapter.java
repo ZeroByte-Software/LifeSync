@@ -1,6 +1,7 @@
 package com.zerobyte.lifesync;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,7 +19,8 @@ import android.widget.TextView;
 public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> {
 
 	private Context context;
-	private List<ArrayList<ScheduleEvent>> Schedule;
+	private HashMap<Integer, ScheduleEvent> schedule_data = null;
+	private List<ArrayList<TimeSlot>> time_slots_data = null;
 
 	static class ViewHolder {
 
@@ -28,13 +30,12 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ScheduleListAdapter(Context context, List data) {
-		super(context, R.layout.schedule_row, data);
-
-		Schedule = new ArrayList<ArrayList<ScheduleEvent>>();
-
+	public ScheduleListAdapter(Context context, List time_slots_data,
+			HashMap<Integer, ScheduleEvent> schedule_data) {
+		super(context, R.layout.schedule_row, time_slots_data);
 		this.context = context;
-		this.Schedule = data;
+		this.time_slots_data = time_slots_data;
+		this.schedule_data = schedule_data;
 	}
 
 	@Override
@@ -65,7 +66,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 			holder = (ViewHolder) rowView.getTag();
 		}
 
-		ArrayList<ScheduleEvent> events_in_timeslot = Schedule.get(position);
+		ArrayList<TimeSlot> time_slots_by_time = time_slots_data.get(position);
 
 		String time_label = position + ":00";
 		if (position < 10) {
@@ -74,11 +75,14 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 		holder.time_slot_tv.setText(time_label);
 
 		Resources rsc = getContext().getResources();
-		int AndroidGreen = rsc.getColor(android.R.color.holo_green_light);
-		int AndroidBlue = rsc.getColor(android.R.color.holo_blue_light);
+		int AndroidGreen = rsc.getColor(android.R.color.holo_green_dark);
+		int AndroidBlue = rsc.getColor(android.R.color.holo_blue_dark);
 
+		
 		for (int i = 0; i < 7; i++) {
-
+		final int pos = position;
+		final int ind = i;
+			
 			Button day_btn = null;
 			switch (i) {
 			case 0:
@@ -110,41 +114,40 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 				break;
 			}
 
-			if (events_in_timeslot.get(i).isFilled_time_slot()) {
-				day_btn.setBackgroundColor(AndroidGreen);
-			} else {
+			switch (time_slots_by_time.get(i).getStatus()) {
+			case 0: // Empty
 				day_btn.setBackgroundColor(android.R.drawable.btn_default);
-			}
-			
-			day_btn.setOnClickListener(new OnClickListener() {
-		        public void onClick(View v) {
-		        	Intent displayEventIntent = new Intent(v.getContext(),
-							EventDisplayActivity.class);
-		        	((ScheduleActivity) v.getContext()).startActivity(displayEventIntent);
-		        }
+				break;
 
-		    });
+			case 1: // Self
+				day_btn.setBackgroundColor(AndroidGreen);
+				break;
+
+			default: // Else
+				day_btn.setBackgroundColor(AndroidBlue);
+				break;
+			}
+
+			day_btn.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					if (time_slots_data.get(pos).get(ind).getStatus() != 0) {
+						Intent displayEventIntent = new Intent(v.getContext(),
+								EventDisplayActivity.class);
+						((AndroidTabLayoutActivity) v.getContext())
+								.startActivity(displayEventIntent);
+					}
+				}
+
+			});
 
 		}
 
-		// if (trans.getAmount().charAt(0) == '-') {
-		// if (trans.getOrig_amount().endsWith("d"))
-		// holder.TransAmount.setText("$" + trans.getAmount().substring(1)
-		// + "*");
-		// else
-		// holder.TransAmount
-		// .setText("$" + trans.getAmount().substring(1));
-		// holder.TransAmount.setTextColor(moneyred);
-		// holder.TransTag.setBackgroundColor(moneyred);
-		// } else {
-		// if (trans.getOrig_amount().endsWith("d"))
-		// holder.TransAmount.setText("$" + trans.getAmount() + "*");
-		// else
-		// holder.TransAmount.setText("$" + trans.getAmount());
-		// holder.TransAmount.setTextColor(moneygreen);
-		// holder.TransTag.setBackgroundColor(moneygreen);
-		// }
-
 		return rowView;
+	}
+
+	public void update_schedule_data(HashMap<Integer, ScheduleEvent> schedule_data) {
+		this.schedule_data = schedule_data;
+
+		notifyDataSetChanged();
 	}
 }

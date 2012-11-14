@@ -23,11 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".ScheduleActivity" />
         <activity android:name=".EventDisplayActivity" />
         <activity android:name=".EventInputActivity" />
         <activity android:name=".FriendListActivity" />
-        <activity android:name=".BumpActivity" />
         <activity
             android:name=".AndroidTabLayoutActivity"
             android:label="@string/title_activity_life_sync" >

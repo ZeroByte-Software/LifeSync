@@ -15,19 +15,19 @@ public class EventPagerAdapter extends PagerAdapter {
 	public Object instantiateItem(View collection, int position) {
 		LayoutInflater inflater = (LayoutInflater) collection.getContext()
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		int resId = 0;
-		switch (position) {
-		case 0:
-			resId = R.layout.event_page;
-			break;
-		case 1:
-			resId = R.layout.event_page;
-			break;
-		case 2:
-			resId = R.layout.event_page;
-			break;
-		}
-		View view = inflater.inflate(resId, null);
+//		int resId = 0;
+//		switch (position) {
+//		case 0:
+//			resId = R.layout.event_page;
+//			break;
+//		case 1:
+//			resId = R.layout.event_page;
+//			break;
+//		case 2:
+//			resId = R.layout.event_page;
+//			break;
+//		}
+		View view = inflater.inflate(R.layout.event_page, null);
 		((ViewPager) collection).addView(view, 0);
 		return view;
 	}

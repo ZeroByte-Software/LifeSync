@@ -1,26 +1,48 @@
 package com.zerobyte.lifesync;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 public class EventDisplayActivity extends Activity {
+
+	private EventPagerAdapter adapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_eventdisplay);
 
-		EventPagerAdapter adapter = new EventPagerAdapter();
+		adapter = new EventPagerAdapter();
 		ViewPager eventPager = (ViewPager) findViewById(R.id.event_pager);
 		eventPager.setAdapter(adapter);
 		eventPager.setCurrentItem(0);
+
+
+		eventPager.setOnPageChangeListener(new OnPageChangeListener() {
+
+			public void onPageSelected(int pos) {
+				// TODO Auto-generated method stub
+				TextView pageNumber = (TextView) findViewById(R.id.pageNumber);
+				int position = pos + 1;
+				pageNumber.setText("Event " + position + " of " + adapter.getCount());
+			}
+
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+
+			}
+
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
 
 	}
 
@@ -28,9 +50,7 @@ public class EventDisplayActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 
-			new MenuInflater(this).inflate(R.menu.menu_eventdisplay, menu);
-
-
+		new MenuInflater(this).inflate(R.menu.menu_eventdisplay, menu);
 		return (super.onCreateOptionsMenu(menu));
 	}
 

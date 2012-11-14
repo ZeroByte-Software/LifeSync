@@ -9,13 +9,25 @@
         android:orientation="vertical"
         android:padding="10dp" >
 
+        <!-- Page Number -->
+
+        <TextView
+            android:id="@+id/pageNumber"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Event 1 of 3"
+            android:textSize="12sp" />
+
         <!-- Name Field -->
 
         <TextView
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:gravity="left"
             android:text="Name" />
 

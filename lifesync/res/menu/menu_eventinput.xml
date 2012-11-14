@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/editEvent_option"
+        android:id="@+id/CANCEL_option"
         android:icon="@drawable/navigation_cancel"
         android:showAsAction="ifRoom"
-        android:title="Add Item"/>
+        android:title="CANCEL"/>
     <item
-        android:id="@+id/deleteEvent_option"
+        android:id="@+id/OK_option"
         android:icon="@drawable/navigation_accept"
         android:showAsAction="ifRoom"
-        android:title="Add Item"/>
+        android:title="OK"/>
 
 </menu>
