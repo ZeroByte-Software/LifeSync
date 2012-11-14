@@ -17,7 +17,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +26,8 @@ import android.widget.Toast;
 
 public class RegisterActivity extends Activity {
 	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
+	final private int MAX_TIMEOUT = 5000;
+	final private int MAX_RETRIES = 1;
 	final private int HTTP_CREATED = 201;
 	final private int HTTP_CONFLICT = 409;
 
@@ -38,6 +39,7 @@ public class RegisterActivity extends Activity {
 		// Allow properties of textbox to be used
 		final EditText editTxtEmail = (EditText)findViewById(R.id.registerEmail);
         final EditText editTxtPassword = (EditText)findViewById(R.id.registerPassword);
+        final EditText editTxtConfirmPassword = (EditText)findViewById(R.id.registerConfirmPassword);
         final EditText editTxtFirstName = (EditText)findViewById(R.id.registerFirstName);
         final EditText editTxtLastName = (EditText)findViewById(R.id.registerLastName);
 		
@@ -47,31 +49,39 @@ public class RegisterActivity extends Activity {
 			public void onClick(View v) {
 				String email = editTxtEmail.getText().toString();
 				String password = editTxtPassword.getText().toString();
+				String passwordConfirm = editTxtConfirmPassword.getText().toString();
 				String fName = editTxtFirstName.getText().toString();
 				String lName = editTxtLastName.getText().toString();
 				
+				// If any text boxes are empty...
 				if( email.equals("") || password.equals("") || fName.equals("") || lName.equals("") )
 					showToast( "Please enter your registration info." );
+				// If passwords do not match...
+				else if( !password.equals(passwordConfirm) )
+					showToast( "Passwords do not match. Please re-enter your password." );
 				else
 					register( email, password, fName, lName );
 			}
 		});
 	}
 	
+    /* 
+     * Creates HTTP client and connects to web server to register user
+     */
 	private void register( String email, String password, String fName, String lName )
 	{
 		AndroidHttpClient httpClient = new AndroidHttpClient( SERVER_URL );
     	ParameterMap params = httpClient.newParams();
     	
-    	httpClient.setReadTimeout( 5000 );
-    	httpClient.setMaxRetries( 1 );
+    	httpClient.setReadTimeout( MAX_TIMEOUT );
+    	httpClient.setMaxRetries( MAX_RETRIES );
     	
     	params.add( "email", email );
     	params.add( "password", password );
     	params.add( "fName", fName );
     	params.add( "lName", lName );
     	
-    	// Contact server using POST via seperate thread
+    	// Contact server using POST via separate thread
     	httpClient.post( "/register", params, new AsyncCallback()
     	{
 			@Override
@@ -102,7 +112,7 @@ public class RegisterActivity extends Activity {
 	}
 	
     /*
-     * Displays a toast with a specified string
+     * Displays toast with a specified string
      */
     public void showToast( String text )
     {
@@ -112,7 +122,7 @@ public class RegisterActivity extends Activity {
     }
     
     /*
-     * Creates dialog that displays if email already exists in database
+     * Creates dialog that displays when account is successfully created
      */
     public class AccountCreatedDialogFragment extends DialogFragment {
         @Override
@@ -122,8 +132,7 @@ public class RegisterActivity extends Activity {
             builder.setMessage(R.string.dialogAccountCreated)
                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
-                    	   Intent registeredIntent = new Intent(RegisterActivity.this, AndroidTabLayoutActivity.class);
-                    	   startActivity(registeredIntent);
+                    	   finish();	// Close RegisterActivity and return to LoginActivity
                        }
                    });
             // Create the AlertDialog object and return it
@@ -142,7 +151,7 @@ public class RegisterActivity extends Activity {
             builder.setMessage(R.string.dialogDuplicateEmail)
                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
-                           // Do nothing...
+                           // Do nothing but close dialog
                        }
                    });
             // Create the AlertDialog object and return it

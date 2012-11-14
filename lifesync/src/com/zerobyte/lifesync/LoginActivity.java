@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
     	params.add( "email", email );
     	params.add( "password", password );
     	
-    	// Contact server using POST via seperate thread
+    	// Contact server using POST via separate thread
     	httpClient.post( "/login", params, new AsyncCallback()
     	{
 			@Override
@@ -100,7 +100,7 @@ public class LoginActivity extends Activity {
     }
     
     /*
-     * Displays a toast with a specified string
+     * Displays toast with a specified string
      */
     public void showToast( String text )
     {
