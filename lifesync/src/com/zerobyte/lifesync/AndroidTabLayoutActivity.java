@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -107,6 +109,23 @@ public class AndroidTabLayoutActivity extends Activity {
 
 		// FRIEND LIST LOGIC
 
+		
+		
+		// BUMP LOGIC GOES HERE
+		
+		Button bumpbtn = (Button) findViewById(R.id.btnBump);
+//		bumpbtn.setOnClickListener(new View.OnClickListener() {
+//			public void onClick(View v) {
+//				String email = editTxtEmail.getText().toString();
+//				String password = editTxtPassword.getText().toString();
+//				
+//				if( email.equals("") || password.equals("") )
+//					showToast( "Please enter your email and password." );
+//				else
+//					login(email, password);
+//			}
+//		});
+		
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.zerobyte.lifesync.model;
 
+import java.util.Vector;
+
 //Bean class used to hold data about a single restriction. 
 public class User
 {
@@ -10,15 +12,17 @@ public class User
     boolean is_admin;
     String email; 
     int fb_id;
+    Vector<Schedule> scheduleList;
     
     public User() {
-    	user_name = "";
-    	password = "";
-    	first_name = "";
-    	last_name = "";
-    	is_admin = false;
-    	email = "";
-    	fb_id = -1;
+    	this.user_name = "";
+    	this.password = "";
+    	this.first_name = "";
+    	this.last_name = "";
+    	this.is_admin = false;
+    	this.email = "";
+    	this.fb_id = -1;
+    	this.scheduleList = new Vector<Schedule>();
     }
     
 	/**
@@ -39,6 +43,7 @@ public class User
     	this.is_admin = isAdmin;
     	this.email = email;
     	this.fb_id = fbID;
+    	this.scheduleList = new Vector<Schedule>();  
     }
     
 	public String getUser_name()
@@ -114,23 +119,40 @@ public class User
 	
 	public void createSchedule(int schID) {
 		/*
-		 * TODO arguments: starttime, endtime, desc, title, location, etc etc
+		 * TODO arguments:
 		 * 
 		 */
+		
+		this.scheduleList.add(new Schedule()); // should add some event first?
 		
 	}
 	public void deleteSchedule(int schID) {
 		/*
 		 * TODO call db directly? or wait till some sort of update()?
 		 */
+		
+		for (int i=0; i < this.scheduleList.size(); i++) {
+			if (this.scheduleList.get(i).getSchedule_id() == schID) {
+				this.scheduleList.remove(i);
+			}
+		}
+		
+		
 	}
-	public void viewSchedule(int schID) {
+	public Schedule viewSchedule(int schID) {
 		/*
 		 * for a single event? or the whole set of schedule?
 		 * TODO 
 		 * 
 		 */
 		
+		for (int i=0; i < this.scheduleList.size(); i++) {
+			if (this.scheduleList.get(i).getSchedule_id() == schID) {
+				return this.scheduleList.get(i);
+			}
+		}
+		
+		return null;
 	}
 	public void addFriend(int friendID) {
 		
