@@ -5,6 +5,7 @@ import java.util.Vector;
 //Bean class used to hold data about a single restriction. 
 public class User
 {
+	int user_id;
     String user_name;
     String password;
     String first_name; 
@@ -34,8 +35,9 @@ public class User
 	 * @param email
 	 * @param fbID
 	 */
-    public User(String username, String passwd, String fname, String lname, boolean isAdmin,
+    public User(int userid, String username, String passwd, String fname, String lname, boolean isAdmin,
     		String email, int fbID) {
+    	this.user_id = userid;
     	this.user_name = username;
     	this.password = passwd;
     	this.first_name = fname;
