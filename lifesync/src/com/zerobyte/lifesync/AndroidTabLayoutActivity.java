@@ -18,6 +18,9 @@ import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
+import com.bump.api.IBumpAPI;
+import com.bump.api.BumpAPIIntents;
+
 public class AndroidTabLayoutActivity extends Activity {
 
 	public int currentTab = 0;
@@ -111,7 +114,7 @@ public class AndroidTabLayoutActivity extends Activity {
 
 		
 		
-		// BUMP LOGIC GOES HERE
+		// TODO BUMP LOGIC GOES HERE
 		
 		Button bumpbtn = (Button) findViewById(R.id.btnBump);
 //		bumpbtn.setOnClickListener(new View.OnClickListener() {
