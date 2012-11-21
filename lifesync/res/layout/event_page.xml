@@ -18,7 +18,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="Event 1 of 3"
             android:textSize="12sp" />
 
         <!-- Name Field -->
@@ -32,11 +31,10 @@
             android:text="Name" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventName"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="EECE 419"
             android:textSize="20sp" />
 
         <!-- StartTime Field -->
@@ -50,11 +48,10 @@
             android:text="Start Time" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventStart"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="2:00pm"
             android:textSize="20sp" />
 
         <!-- EndTime Field -->
@@ -68,11 +65,10 @@
             android:text="End Time" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventEnd"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="5:00pm"
             android:textSize="20sp" />
 
         <!-- Location Field -->
@@ -86,11 +82,10 @@
             android:text="Location" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventLocation"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Somewhere on 4th floor"
             android:textSize="20sp" />
 
         <!-- Description Field -->
@@ -104,11 +99,10 @@
             android:text="Description" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventDescription"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="This is the best course ever! Right guys? Right?"
             android:textSize="20sp" />
 
         <!-- Owner Field -->
@@ -122,11 +116,10 @@
             android:text="Owner" />
 
         <TextView
-            android:id="@+id/loginEmail"
+            android:id="@+id/eventOwner"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="Self"
             android:textSize="20sp" />
     </LinearLayout>
 
