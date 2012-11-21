@@ -51,6 +51,9 @@ public class AndroidTabLayoutActivity extends Activity {
 	private IBumpAPI api;
 	private boolean isBumpEnabled = false;
 	private boolean isBumpInit = false;
+	
+	private String myBumpName = "LifeSync User";
+	private String myBumpData = "This is the data";
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
@@ -61,7 +64,7 @@ public class AndroidTabLayoutActivity extends Activity {
 	        new Thread() {
 	            public void run() {
 	                try {
-	                    api.configure("2156db3846b54a2693f1ddfab9db3b8f", "LifeSync User");
+	                    api.configure("2156db3846b54a2693f1ddfab9db3b8f", myBumpName);
 	                } catch (RemoteException e) {
 	                	Log.w("LifeSync_Bump", e);
 	                } 
@@ -104,7 +107,7 @@ public class AndroidTabLayoutActivity extends Activity {
 					Log.i("LifeSync_Bump",
 							"Channel confirmed with "
 									+ api.userIDForChannelID(channelID));
-					api.send(channelID, "This will be our data in whatever format".getBytes());
+					api.send(channelID, myBumpData.getBytes());
 				} else if (action.equals(BumpAPIIntents.NOT_MATCHED)) {
 					Log.i("LifeSync_Bump", "Not matched.");
 				} else if (action.equals(BumpAPIIntents.CONNECTED)) {
