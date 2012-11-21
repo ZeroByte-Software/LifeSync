@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -51,6 +50,7 @@ public class AndroidTabLayoutActivity extends Activity {
 	// BUMP VARIABLES
 	private IBumpAPI api;
 	private boolean isBumpEnabled = false;
+	private boolean isBumpInit = false;
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
@@ -61,11 +61,10 @@ public class AndroidTabLayoutActivity extends Activity {
 	        new Thread() {
 	            public void run() {
 	                try {
-	                    api.configure("2156db3846b54a2693f1ddfab9db3b8f", "Bump User");
+	                    api.configure("2156db3846b54a2693f1ddfab9db3b8f", "LifeSync User");
 	                } catch (RemoteException e) {
-	                	Log.w("BumpTest", e);
-	                }
-
+	                	Log.w("LifeSync_Bump", e);
+	                } 
 	            }
 	        }.start();
 
@@ -110,9 +109,10 @@ public class AndroidTabLayoutActivity extends Activity {
 					Log.i("LifeSync_Bump", "Not matched.");
 				} else if (action.equals(BumpAPIIntents.CONNECTED)) {
 					Log.i("LifeSync_Bump", "Connected to Bump...");
-					api.enableBumping();
+//					api.enableBumping(); // wait till app to enable
 				}
 			} catch (RemoteException e) {
+				
 			}
 		}
 	};
@@ -153,13 +153,43 @@ public class AndroidTabLayoutActivity extends Activity {
 				invalidateOptionsMenu();
 				
 				if (currentTab != 2) {
-					// moving away from bump tab
+					// not within bump tab
 					if (isBumpEnabled) {
-						unbindService(connection);
-						unregisterReceiver(receiver);
+						try {
+						api.disableBumping();
+					} catch (RemoteException e) {
+	                	Log.w("LifeSync_Bump", e);
+					}
+						
+//						unbindService(connection);
+//						unregisterReceiver(receiver);
 						
 						isBumpEnabled = false;
 					}
+				}
+				else if (currentTab == 2) {
+					if (!isBumpInit) {
+						// moving into the bump tab, initialize bump api service 
+						bindService(new Intent(IBumpAPI.class.getName()),
+								connection, Context.BIND_AUTO_CREATE);
+						Log.i("LifeSync_Bump", "boot");
+						IntentFilter filter = new IntentFilter();
+						filter.addAction(BumpAPIIntents.CHANNEL_CONFIRMED);
+						filter.addAction(BumpAPIIntents.DATA_RECEIVED);
+						filter.addAction(BumpAPIIntents.NOT_MATCHED);
+						filter.addAction(BumpAPIIntents.MATCHED);
+						filter.addAction(BumpAPIIntents.CONNECTED);
+						registerReceiver(receiver, filter);
+					}
+					// disable the api until user clicks the bump button
+//					try {
+//						api.disableBumping();
+//					} catch (RemoteException e) {
+//	                	Log.w("LifeSync_Bump", e);
+//					}
+					isBumpEnabled = false;
+					
+//					isBumpEnabled = true;
 				}
 			}
 		});
@@ -206,28 +236,37 @@ public class AndroidTabLayoutActivity extends Activity {
 		// BUMP LOGIC GOES HERE
 		Button bumpbtn = (Button) findViewById(R.id.btnBump);
 		bumpbtn.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				
-//				new BumpHandler().execute((Void)null);
+			public void onClick(View v) {	
 				
 				if (!isBumpEnabled) {
-					bindService(new Intent(IBumpAPI.class.getName()),
-							connection, Context.BIND_AUTO_CREATE);
-					Log.i("LifeSync_Bump", "boot");
-					IntentFilter filter = new IntentFilter();
-					filter.addAction(BumpAPIIntents.CHANNEL_CONFIRMED);
-					filter.addAction(BumpAPIIntents.DATA_RECEIVED);
-					filter.addAction(BumpAPIIntents.NOT_MATCHED);
-					filter.addAction(BumpAPIIntents.MATCHED);
-					filter.addAction(BumpAPIIntents.CONNECTED);
-					registerReceiver(receiver, filter);
+//					bindService(new Intent(IBumpAPI.class.getName()),
+//							connection, Context.BIND_AUTO_CREATE);
+//					Log.i("LifeSync_Bump", "boot");
+//					IntentFilter filter = new IntentFilter();
+//					filter.addAction(BumpAPIIntents.CHANNEL_CONFIRMED);
+//					filter.addAction(BumpAPIIntents.DATA_RECEIVED);
+//					filter.addAction(BumpAPIIntents.NOT_MATCHED);
+//					filter.addAction(BumpAPIIntents.MATCHED);
+//					filter.addAction(BumpAPIIntents.CONNECTED);
+//					registerReceiver(receiver, filter);
+
+					try {
+						api.enableBumping();
+					} catch (RemoteException e) {
+	                	Log.w("LifeSync_Bump", e);
+					}
 					
 					isBumpEnabled = true;
 				}
 				else {
 					// already enabled, disable
-					unbindService(connection);
-					unregisterReceiver(receiver);
+//					unbindService(connection);
+//					unregisterReceiver(receiver);
+					try {
+						api.disableBumping();
+					} catch (RemoteException e) {
+	                	Log.w("LifeSync_Bump", e);
+					}
 					
 					isBumpEnabled = false;
 				}
