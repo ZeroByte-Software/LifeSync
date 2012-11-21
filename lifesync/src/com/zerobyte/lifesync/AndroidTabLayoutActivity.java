@@ -32,6 +32,8 @@ import com.bump.api.BumpAPIIntents;
 
 public class AndroidTabLayoutActivity extends Activity {
 
+	private LifeSyncApplication lfapp;
+
 	public int currentTab = 0;
 	private TabHost tabHost;
 
@@ -42,8 +44,8 @@ public class AndroidTabLayoutActivity extends Activity {
 	private ListView schedule_listView;
 	private ScheduleListAdapter schedule_adapter;
 
-	HashMap<Integer, ScheduleEvent> schedule_data = null;
-	List<ArrayList<TimeSlot>> time_slots_data = null;
+	HashMap<Integer, ScheduleEvent> schedule_data;
+	List<ArrayList<TimeSlot>> time_slots_data;
 
 	// FRIEND LIST VARIABLES
 
@@ -197,8 +199,11 @@ public class AndroidTabLayoutActivity extends Activity {
 			}
 		});
 
+		// Get handler to Application
+		lfapp = (LifeSyncApplication) getApplication();
+
 		// SCHEDULE LOGIC
-		schedule_data = new HashMap<Integer, ScheduleEvent>();
+		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
 		time_slots_data = new ArrayList<ArrayList<TimeSlot>>();
 
 		if (!init_flag) {
@@ -210,9 +215,14 @@ public class AndroidTabLayoutActivity extends Activity {
 				time_slots_data.add(time_slots_by_time);
 			}
 
-			ScheduleEvent se = new ScheduleEvent("lol", "1-4", "2-6", "here",
-					"test man", "Self");
+			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
+					"HERE1", "FIRST EVENT", "SELF");
 			schedule_data.put(se.getEvent_id(), se);
+			se = new ScheduleEvent("SECOND", "1-4", "2-6", "THERE2",
+					"SECOND EVENT", "ALSOSELF");
+			schedule_data.put(se.getEvent_id(), se);
+
+			lfapp.saveSchedule(schedule_data);
 
 			init_flag = true;
 		}
@@ -335,13 +345,30 @@ public class AndroidTabLayoutActivity extends Activity {
 						event_data.get("event_description"), "Self");
 
 				schedule_data.put(se.getEvent_id(), se);
-				update_time_slots_data();
-
+				// update_time_slots_data();
 			}
 
-			schedule_adapter.notifyDataSetChanged();
+			// schedule_adapter.notifyDataSetChanged();
+			lfapp.saveSchedule(schedule_data);
 		}
+	}
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+
+		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
+		time_slots_data.clear();
+		for (int i = 0; i < 24; i++) {
+			ArrayList<TimeSlot> time_slots_by_time = new ArrayList<TimeSlot>();
+			for (int j = 0; j < 7; j++) {
+				time_slots_by_time.add(new TimeSlot(0));
+			}
+			time_slots_data.add(time_slots_by_time);
+		}
+		update_time_slots_data();
+		schedule_adapter.notifyDataSetChanged();
 	}
 
 	public void update_time_slots_data() {
@@ -360,6 +387,48 @@ public class AndroidTabLayoutActivity extends Activity {
 				event_end_time[0] = Integer.parseInt(event_end_time_str[0]);
 				event_end_time[1] = Integer.parseInt(event_end_time_str[1]);
 
+				// If starttime is equal to endttime then fill all time slots
+				if ((event_start_time[0] == event_end_time[0])
+						&& (event_start_time[1] == event_end_time[1])) {
+					for (int i = 0; i <= 6; i++) {
+						for (int j = 0; j <= 23; j++) {
+							time_slots_data.get(j).get(i).setStatus(1);
+							time_slots_data.get(j).get(i).addEvent(se);
+						}
+					}
+					continue;
+				}
+
+				// If starttime is greater than endttime then start from
+				// monday-00:00 to endtime
+				boolean sunday_midnight = false;
+				if ((event_start_time[0] > event_end_time[0])
+						|| ((event_start_time[0] == event_end_time[0]) && (event_start_time[0] > event_end_time[1]))) {
+					for (int i = 0; i <= event_end_time[0]; i++) {
+						int start = 0;
+						int end = 23;
+
+						if (i == event_end_time[0]) {
+							end = event_end_time[1];
+						}
+
+						for (int j = start; j < end; j++) {
+							time_slots_data.get(j).get(i).setStatus(1);
+							time_slots_data.get(j).get(i).addEvent(se);
+						}
+
+						// SPECIAL CASE FOR 23:00-00:00
+						if (i < event_end_time[0]) {
+							time_slots_data.get(23).get(i).setStatus(1);
+							time_slots_data.get(23).get(i).addEvent(se);
+						}
+					}
+
+					event_end_time[0] = 6;
+					event_end_time[1] = 23;
+					sunday_midnight = true;
+				}
+
 				for (int i = event_start_time[0]; i <= event_end_time[0]; i++) {
 					int start = 0;
 					int end = 23;
@@ -377,10 +446,15 @@ public class AndroidTabLayoutActivity extends Activity {
 					}
 
 					// SPECIAL CASE FOR 23:00-00:00
-					if (event_end_time[0] == (i + 1)) {
+					if (i < event_end_time[0]) {
 						time_slots_data.get(23).get(i).setStatus(1);
 						time_slots_data.get(23).get(i).addEvent(se);
 					}
+				}
+
+				if (sunday_midnight) {
+					time_slots_data.get(23).get(6).setStatus(1);
+					time_slots_data.get(23).get(6).addEvent(se);
 				}
 			}
 		}

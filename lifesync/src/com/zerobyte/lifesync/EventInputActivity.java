@@ -21,7 +21,9 @@ public class EventInputActivity extends Activity implements
 		OnItemSelectedListener {
 
 	private Toast toast;
-	
+
+	private String edit_event_id;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -72,13 +74,44 @@ public class EventInputActivity extends Activity implements
 		// Apply the adapter to the spinner
 		s_end_time.setAdapter(end_time_adapter);
 		s_end_time.setOnItemSelectedListener(this);
-		
-		
-		
-		
+
 		// Toast setup
-		toast = toast.makeText(getApplicationContext(), "Event end time is not after start time.", Toast.LENGTH_SHORT);
+		toast = toast.makeText(getApplicationContext(),
+				"Event end time is not after start time.", Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.BOTTOM, 0, 0);
+
+		HashMap<String, String> event_data = (HashMap<String, String>) getIntent()
+				.getSerializableExtra("event_data");
+		if (event_data != null) {
+			edit_event_id = event_data.get("event_id");
+
+			((EditText) findViewById(R.id.event_name)).setText(event_data
+					.get("event_name"));
+			((EditText) findViewById(R.id.event_location)).setText(event_data
+					.get("event_location"));
+			((EditText) findViewById(R.id.event_description))
+					.setText(event_data.get("event_description"));
+
+			String event_start_time_str[] = event_data.get("event_start_time")
+					.split("-");
+			String event_end_time_str[] = event_data.get("event_end_time")
+					.split("-");
+			int[] event_start_time = new int[2];
+			int[] event_end_time = new int[2];
+			event_start_time[0] = Integer.parseInt(event_start_time_str[0]);
+			event_start_time[1] = Integer.parseInt(event_start_time_str[1]);
+			event_end_time[0] = Integer.parseInt(event_end_time_str[0]);
+			event_end_time[1] = Integer.parseInt(event_end_time_str[1]);
+			((Spinner) findViewById(R.id.event_start_day_spinner))
+					.setSelection(event_start_time[0]);
+			((Spinner) findViewById(R.id.event_start_time_spinner))
+					.setSelection(event_start_time[1]);
+			((Spinner) findViewById(R.id.event_end_day_spinner))
+					.setSelection(event_end_time[0]);
+			((Spinner) findViewById(R.id.event_end_time_spinner))
+					.setSelection(event_end_time[1]);
+		}
+
 	}
 
 	@Override
@@ -103,31 +136,36 @@ public class EventInputActivity extends Activity implements
 					.getSelectedItemPosition();
 			int end_time_pos = ((Spinner) findViewById(R.id.event_end_time_spinner))
 					.getSelectedItemPosition();
-			
-			System.out.println("HAHAHA: " + start_day_pos);
-			System.out.println("LOL: " + start_time_pos);
 
-			if (start_day_pos > end_day_pos) {
-				toast.show();
-				break;
-			} else {
-				if(start_day_pos == end_day_pos) {
-					if(start_time_pos >= end_time_pos) {
-						toast.show();
-						break;
-					}
-				}
-			}
+			// if (start_day_pos > end_day_pos) {
+			// toast.show();
+			// break;
+			// } else {
+			// if(start_day_pos == end_day_pos) {
+			// if(start_time_pos >= end_time_pos) {
+			// toast.show();
+			// break;
+			// }
+			// }
+			// }
 
 			HashMap<String, String> event_data = new HashMap<String, String>();
 			event_data.put("event_name",
-					((EditText) findViewById(R.id.event_name)).getText().toString());
-			event_data.put("event_start_time", start_day_pos + "-" + start_time_pos);
+					((EditText) findViewById(R.id.event_name)).getText()
+							.toString());
+			event_data.put("event_start_time", start_day_pos + "-"
+					+ start_time_pos);
 			event_data.put("event_end_time", end_day_pos + "-" + end_time_pos);
-			event_data.put("event_location", ((EditText) findViewById(R.id.event_location)).getText()
+			event_data.put("event_location",
+					((EditText) findViewById(R.id.event_location)).getText()
 							.toString());
-			event_data.put("event_description", ((EditText) findViewById(R.id.event_description)).getText()
+			event_data.put("event_description",
+					((EditText) findViewById(R.id.event_description)).getText()
 							.toString());
+
+			if (edit_event_id != null) {
+				event_data.put("event_id", edit_event_id);
+			}
 
 			Intent resultIntent = new Intent();
 			resultIntent.putExtra("event_data", event_data);
@@ -161,5 +199,4 @@ public class EventInputActivity extends Activity implements
 	public void onNothingSelected(AdapterView<?> parent) {
 		// Another interface callback
 	}
-
 }
