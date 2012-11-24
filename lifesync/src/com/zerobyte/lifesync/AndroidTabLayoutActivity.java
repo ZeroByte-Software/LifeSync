@@ -64,7 +64,7 @@ public class AndroidTabLayoutActivity extends Activity {
 
 			Log.i("LifeSync_Bump", "onServiceConnected");
 			api = IBumpAPI.Stub.asInterface(binder);
-			new Thread() {
+			new Thread( new Runnable () {
 				public void run() {
 					try {
 						api.configure("2156db3846b54a2693f1ddfab9db3b8f",
@@ -73,7 +73,7 @@ public class AndroidTabLayoutActivity extends Activity {
 						Log.w("LifeSync_Bump", e);
 					}
 				}
-			}.start();
+			}).start();
 
 			Log.d("LifeSync_Bump", "Service connected");
 		}

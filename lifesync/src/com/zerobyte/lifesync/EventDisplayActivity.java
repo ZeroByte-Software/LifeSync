@@ -59,14 +59,16 @@ public class EventDisplayActivity extends FragmentActivity {
 	/**
 	 * The pager adapter, which provides the pages to the view pager widget.
 	 */
-
+	private PagerAdapter mPagerAdapter;
+	
+	
 	private LifeSyncApplication lfapp;
 	HashMap<Integer, ScheduleEvent> schedule_data;
 	private ArrayList<Integer> schedule_id_list;
 	
 	private static final int EDIT_EVENT = 0;
-
-	private PagerAdapter mPagerAdapter;
+	
+	private boolean goback = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -258,7 +260,7 @@ public class EventDisplayActivity extends FragmentActivity {
 			}
 
 			lfapp.saveSchedule(schedule_data);
-			onBackPressed();
+			goback = true;
 		}
 
 	}
@@ -268,6 +270,9 @@ public class EventDisplayActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		
+		if(goback) {
+			onBackPressed();
+		}
 //		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
 //		time_slots_data.clear();
 //		for (int i = 0; i < 24; i++) {
@@ -280,12 +285,6 @@ public class EventDisplayActivity extends FragmentActivity {
 //		update_time_slots_data();
 //		schedule_adapter.notifyDataSetChanged();
 	}
-	
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// No call for super(). Bug on API Level > 11.
-	}
-	
 	
 
 	/**
@@ -315,6 +314,7 @@ public class EventDisplayActivity extends FragmentActivity {
 		}
 	}
 
+	// Pass to for fragment
 	public ArrayList<Integer> get_schedule_id_list() {
 		return schedule_id_list;
 	}
