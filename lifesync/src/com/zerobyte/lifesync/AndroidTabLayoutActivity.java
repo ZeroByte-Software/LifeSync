@@ -252,17 +252,6 @@ public class AndroidTabLayoutActivity extends Activity {
 			public void onClick(View v) {	
 				
 				if (!isBumpEnabled) {
-//					bindService(new Intent(IBumpAPI.class.getName()),
-//							connection, Context.BIND_AUTO_CREATE);
-//					Log.i("LifeSync_Bump", "boot");
-//					IntentFilter filter = new IntentFilter();
-//					filter.addAction(BumpAPIIntents.CHANNEL_CONFIRMED);
-//					filter.addAction(BumpAPIIntents.DATA_RECEIVED);
-//					filter.addAction(BumpAPIIntents.NOT_MATCHED);
-//					filter.addAction(BumpAPIIntents.MATCHED);
-//					filter.addAction(BumpAPIIntents.CONNECTED);
-//					registerReceiver(receiver, filter);
-
 					try {
 						api.enableBumping();
 					} catch (RemoteException e) {
@@ -273,8 +262,6 @@ public class AndroidTabLayoutActivity extends Activity {
 				}
 				else {
 					// already enabled, disable
-//					unbindService(connection);
-//					unregisterReceiver(receiver);
 					try {
 						api.disableBumping();
 					} catch (RemoteException e) {
