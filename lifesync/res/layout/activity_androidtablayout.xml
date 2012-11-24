@@ -115,6 +115,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" >
 
+                <TextView
+                    android:id="@+id/statusBump"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:gravity="center"
+                    android:text="Disabled" />
+
                 <Button
                     android:id="@+id/btnBump"
                     android:layout_width="wrap_content"

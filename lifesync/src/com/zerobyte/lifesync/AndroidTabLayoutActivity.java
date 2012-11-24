@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TextView;
 
 import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
@@ -53,33 +54,34 @@ public class AndroidTabLayoutActivity extends Activity {
 	private IBumpAPI api;
 	private boolean isBumpEnabled = false;
 	private boolean isBumpInit = false;
-	
+
 	private String myBumpName = "LifeSync User";
 	private String myBumpData = "This is the data";
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
-	    public void onServiceConnected(ComponentName className, IBinder binder) {
+		public void onServiceConnected(ComponentName className, IBinder binder) {
 
-	        Log.i("LifeSync_Bump", "onServiceConnected");
-	        api = IBumpAPI.Stub.asInterface(binder);
-	        new Thread() {
-	            public void run() {
-	                try {
-	                    api.configure("2156db3846b54a2693f1ddfab9db3b8f", myBumpName);
-	                } catch (RemoteException e) {
-	                	Log.w("LifeSync_Bump", e);
-	                } 
-	            }
-	        }.start();
+			Log.i("LifeSync_Bump", "onServiceConnected");
+			api = IBumpAPI.Stub.asInterface(binder);
+			new Thread() {
+				public void run() {
+					try {
+						api.configure("2156db3846b54a2693f1ddfab9db3b8f",
+								myBumpName);
+					} catch (RemoteException e) {
+						Log.w("LifeSync_Bump", e);
+					}
+				}
+			}.start();
 
-	        Log.d("LifeSync_Bump", "Service connected");
-	    }
+			Log.d("LifeSync_Bump", "Service connected");
+		}
 
-	    @Override
-	    public void onServiceDisconnected(ComponentName className) {
-	        Log.d("LifeSync_Bump", "Service disconnected");
-	    }
+		@Override
+		public void onServiceDisconnected(ComponentName className) {
+			Log.d("LifeSync_Bump", "Service disconnected");
+		}
 	};
 
 	private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -114,10 +116,10 @@ public class AndroidTabLayoutActivity extends Activity {
 					Log.i("LifeSync_Bump", "Not matched.");
 				} else if (action.equals(BumpAPIIntents.CONNECTED)) {
 					Log.i("LifeSync_Bump", "Connected to Bump...");
-//					api.enableBumping(); // wait till app to enable
+					// api.enableBumping(); // wait till app to enable
 				}
 			} catch (RemoteException e) {
-				
+
 			}
 		}
 	};
@@ -152,29 +154,30 @@ public class AndroidTabLayoutActivity extends Activity {
 		tabHost.addTab(bumpspec); // Adding bump tab
 		tabHost.setCurrentTab(0);
 
+		final int enabledGreen = getResources().getColor(android.R.color.holo_green_dark);
+		final int disabledRed = getResources().getColor(android.R.color.holo_red_dark);
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
 				currentTab = tabHost.getCurrentTab();
 				invalidateOptionsMenu();
-				
+
 				if (currentTab != 2) {
 					// not within bump tab
 					if (isBumpEnabled) {
 						try {
-						api.disableBumping();
-					} catch (RemoteException e) {
-	                	Log.w("LifeSync_Bump", e);
-					}
-						
-//						unbindService(connection);
-//						unregisterReceiver(receiver);
-						
+							api.disableBumping();
+						} catch (RemoteException e) {
+							Log.w("LifeSync_Bump", e);
+						}
+
+						// unbindService(connection);
+						// unregisterReceiver(receiver);
+
 						isBumpEnabled = false;
 					}
-				}
-				else if (currentTab == 2) {
+				} else if (currentTab == 2) {
 					if (!isBumpInit) {
-						// moving into the bump tab, initialize bump api service 
+						// moving into the bump tab, initialize bump api service
 						bindService(new Intent(IBumpAPI.class.getName()),
 								connection, Context.BIND_AUTO_CREATE);
 						Log.i("LifeSync_Bump", "boot");
@@ -185,16 +188,22 @@ public class AndroidTabLayoutActivity extends Activity {
 						filter.addAction(BumpAPIIntents.MATCHED);
 						filter.addAction(BumpAPIIntents.CONNECTED);
 						registerReceiver(receiver, filter);
+
+						isBumpInit = true;
 					}
 					// disable the api until user clicks the bump button
-//					try {
-//						api.disableBumping();
-//					} catch (RemoteException e) {
-//	                	Log.w("LifeSync_Bump", e);
-//					}
+					// try {
+					// api.disableBumping();
+					// } catch (RemoteException e) {
+					// Log.w("LifeSync_Bump", e);
+					// }
 					isBumpEnabled = false;
-					
-//					isBumpEnabled = true;
+					((Button) findViewById(R.id.btnBump))
+							.setText("Enable Bump");
+					((TextView) findViewById(R.id.statusBump))
+							.setText("Disabled");
+					((TextView) findViewById(R.id.statusBump))
+							.setTextColor(disabledRed);
 				}
 			}
 		});
@@ -247,30 +256,40 @@ public class AndroidTabLayoutActivity extends Activity {
 		// FRIEND LIST LOGIC
 
 		// BUMP LOGIC GOES HERE
-		Button bumpbtn = (Button) findViewById(R.id.btnBump);
+		final Button bumpbtn = (Button) findViewById(R.id.btnBump);
 		bumpbtn.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {	
-				
+			public void onClick(View v) {
+
 				if (!isBumpEnabled) {
 					try {
 						api.enableBumping();
 					} catch (RemoteException e) {
-	                	Log.w("LifeSync_Bump", e);
+						Log.w("LifeSync_Bump", e);
 					}
-					
+
 					isBumpEnabled = true;
-				}
-				else {
+					bumpbtn.setText("Disable Bump");
+					((TextView) findViewById(R.id.statusBump))
+							.setText("Enabled");
+					((TextView) findViewById(R.id.statusBump))
+							.setTextColor(enabledGreen);
+
+				} else {
 					// already enabled, disable
 					try {
 						api.disableBumping();
 					} catch (RemoteException e) {
-	                	Log.w("LifeSync_Bump", e);
+						Log.w("LifeSync_Bump", e);
 					}
-					
+
 					isBumpEnabled = false;
+					bumpbtn.setText("Enable Bump");
+					((TextView) findViewById(R.id.statusBump))
+							.setText("Disabled");
+					((TextView) findViewById(R.id.statusBump))
+							.setTextColor(disabledRed);
 				}
-				
+
 			}
 		});
 
@@ -446,17 +465,21 @@ public class AndroidTabLayoutActivity extends Activity {
 			}
 		}
 	}
-	
+
 	// BUMP stuff
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
 	public void onDestroy() {
-		Log.i("LifeSync_Bump", "onDestroy");
-		unbindService(connection);
-		unregisterReceiver(receiver);
+		if (isBumpInit) {
+			Log.i("LifeSync_Bump", "onDestroy");
+			unbindService(connection);
+			unregisterReceiver(receiver);
+			isBumpInit = false;
+		}
+
 		super.onDestroy();
 	}
 }
