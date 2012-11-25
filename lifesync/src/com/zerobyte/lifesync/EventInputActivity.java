@@ -2,7 +2,6 @@ package com.zerobyte.lifesync;
 
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class EventInputActivity extends Activity implements
+public class EventInputActivity extends LifeSyncActivityBase implements
 		OnItemSelectedListener {
 
 	private Toast toast;
