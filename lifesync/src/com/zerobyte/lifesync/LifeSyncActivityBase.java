@@ -1,3 +1,9 @@
+/* LifeSyncActivityBase.java
+ * 
+ * Base activity class for Lifesync
+ * 
+ */
+
 package com.zerobyte.lifesync;
 
 import android.app.Activity;
@@ -6,7 +12,7 @@ import android.widget.Toast;
 
 import com.zerobyte.lifesync.model.*;
 
-public class LifeSyncActivity extends Activity {
+public class LifeSyncActivityBase extends Activity {
 	protected static User loggedInUser = new User();
 	
     /*

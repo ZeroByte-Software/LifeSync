@@ -10,19 +10,15 @@ import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import org.json.*;
 
 
-public class LoginActivity extends LifeSyncActivity {
+public class LoginActivity extends LifeSyncActivityBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +62,7 @@ public class LoginActivity extends LifeSyncActivity {
     	params.add( "email", email );
     	params.add( "password", password );
     	
-    	// Contact server using POST via separate thread
+    	// Contact server using GET via separate thread
     	httpClient.get( "/login", params, new AsyncCallback()
     	{
 			@Override
@@ -84,7 +80,8 @@ public class LoginActivity extends LifeSyncActivity {
 						loggedInUser.setLast_name(userJSON.getString("last_name"));
 						loggedInUser.setUserid(userJSON.getInt("user_id"));
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
+						showToast( "JSON exception occured" );
+						showToast( e.getMessage() );
 						e.printStackTrace();
 					}
 		
@@ -99,6 +96,7 @@ public class LoginActivity extends LifeSyncActivity {
 			public void onError( Exception e )
 			{
 				showToast( "Server error. Please try again." );
+				showToast( e.getMessage() );
 				e.printStackTrace();
 			}
     	});

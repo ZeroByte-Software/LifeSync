@@ -214,14 +214,12 @@ public class EventDisplayActivity extends FragmentActivity {
 			builder.setInverseBackgroundForced(true);
 			builder.setNegativeButton("Cancel",
 					new DialogInterface.OnClickListener() {
-						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialog.dismiss();
 						}
 					});
 			builder.setPositiveButton("Delete",
 					new DialogInterface.OnClickListener() {
-						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							int currentPage = mPager.getCurrentItem();
 							schedule_data.remove(schedule_id_list.get(currentPage));

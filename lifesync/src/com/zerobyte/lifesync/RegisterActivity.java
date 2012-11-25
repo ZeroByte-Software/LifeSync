@@ -22,7 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class RegisterActivity extends LifeSyncActivity {
+public class RegisterActivity extends LifeSyncActivityBase {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,16 +103,7 @@ public class RegisterActivity extends LifeSyncActivity {
 			}
     	});
 	}
-	
-    /*
-     * Displays toast with a specified string
-     */
-    public void showToast( String text )
-    {
-    	Context context = getApplicationContext();
-    	Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT);
-    	toast.show();
-    }
+
     
     /*
      * Creates dialog that displays when account is successfully created

@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -32,7 +31,7 @@ import android.widget.TextView;
 import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
 
-public class AndroidTabLayoutActivity extends LifeSyncActivity {
+public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 	private LifeSyncApplication lfapp;
 
@@ -62,7 +61,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivity {
 	private int myBumpRcvdUserID;
 
 	private final ServiceConnection connection = new ServiceConnection() {
-		@Override
 		public void onServiceConnected(ComponentName className, IBinder binder) {
 
 			Log.i("LifeSync_Bump", "onServiceConnected");
@@ -81,7 +79,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivity {
 			Log.d("LifeSync_Bump", "Service connected");
 		}
 
-		@Override
 		public void onServiceDisconnected(ComponentName className) {
 			Log.d("LifeSync_Bump", "Service disconnected");
 		}
