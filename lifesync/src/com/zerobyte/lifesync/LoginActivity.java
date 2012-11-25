@@ -75,7 +75,7 @@ public class LoginActivity extends Activity {
     	params.add( "password", password );
     	
     	// Contact server using POST via separate thread
-    	httpClient.post( "/login", params, new AsyncCallback()
+    	httpClient.get( "/login", params, new AsyncCallback()
     	{
 			@Override
 			public void onComplete( HttpResponse httpResponse ) {
