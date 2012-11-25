@@ -17,6 +17,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import org.json.*;
 
+import com.zerobyte.lifesync.model.User;
+
 
 public class LoginActivity extends LifeSyncActivityBase {
     @Override
@@ -51,6 +53,19 @@ public class LoginActivity extends LifeSyncActivityBase {
 		});
     }
     
+    @Override
+    public void onRestart()
+    {
+    	super.onRestart();
+    	
+    	final EditText editTxtEmail = (EditText)findViewById(R.id.loginEmail);
+        final EditText editTxtPassword = (EditText)findViewById(R.id.loginPassword);
+        
+        // Clear text boxes
+        editTxtEmail.setText( "" );
+        editTxtPassword .setText( "" );
+    }
+    
     /* 
      * Creates HTTP client and connects to web server to authenticate user
      */
@@ -71,6 +86,7 @@ public class LoginActivity extends LifeSyncActivityBase {
 				
 				if( status == httpClient.HTTP_OK )
 				{
+					loggedInUser = new User();
 					JSONObject userJSON = null;
 					try {
 						userJSON = new JSONObject(httpResponse.getBodyAsString());
@@ -79,14 +95,15 @@ public class LoginActivity extends LifeSyncActivityBase {
 						loggedInUser.setFirst_name(userJSON.getString("first_name"));
 						loggedInUser.setLast_name(userJSON.getString("last_name"));
 						loggedInUser.setUserid(userJSON.getInt("user_id"));
+						
+						Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
+						startActivity(loginIntent);
+						finish();
 					} catch (JSONException e) {
-						showToast( "JSON exception occured" );
+						showToast( "JSON exception occured. Canceling log in." );
 						showToast( e.getMessage() );
 						e.printStackTrace();
 					}
-		
-					Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
-					startActivity(loginIntent);
 				}
 				else
 					showToast( "Incorrect email or password. Please try again." );

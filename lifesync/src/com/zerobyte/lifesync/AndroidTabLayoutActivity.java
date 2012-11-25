@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -30,6 +34,7 @@ import android.widget.TextView;
 
 import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
+import com.zerobyte.lifesync.RegisterActivity.AccountCreatedDialogFragment;
 
 public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
@@ -59,7 +64,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 	private String myBumpData = "This is the data";
 	private String myBumpRcvdEmail = "";
 	private int myBumpRcvdUserID;
-
+	
 	private final ServiceConnection connection = new ServiceConnection() {
 		public void onServiceConnected(ComponentName className, IBinder binder) {
 
@@ -476,6 +481,13 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		}
 	}
+	
+	@Override
+	public void onBackPressed()
+	{
+		LoggingOutDialogFragment dialog = new LoggingOutDialogFragment();
+		dialog.show( getFragmentManager(), "loggingOut" );
+	}
 
 	// BUMP stuff
 	@Override
@@ -493,4 +505,32 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 		super.onDestroy();
 	}
+
+
+    public class LoggingOutDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(R.string.dialogLoggingOut)
+                   .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                    	   	loggedInUser = null;	// Remove reference to currently logged in user
+                    	   
+                    	   	// Close activity and open up new LoginActivity
+                    	   	Intent backToLogin = new Intent(AndroidTabLayoutActivity.this, LoginActivity.class);
+                    	   	startActivity(backToLogin);
+                    	   	finish();	
+                       }
+                   })
+            	   .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            		   public void onClick(DialogInterface dialog, int id) {
+            			   	// Do nothing...
+            		   }
+            	   });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+    }
+
 }

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.zerobyte.lifesync.model.*;
 
 public class LifeSyncActivityBase extends Activity {
-	protected static User loggedInUser = new User();
+	protected static User loggedInUser = null;
 	
     /*
      * Displays toast with a specified string
