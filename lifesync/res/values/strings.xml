@@ -51,5 +51,7 @@
         <item>23:00</item>
     </string-array>
         <string name="editTxtConfirmPassword">Confirm Password</string>
+        <string name="dialogLoggingOut">Are you sure you want to log out?</string>
+        <string name="cancel">Cancel</string>
 
 </resources>
