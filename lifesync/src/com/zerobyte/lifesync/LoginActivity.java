@@ -62,9 +62,7 @@ public class LoginActivity extends LifeSyncActivity {
     {
     	final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
     	ParameterMap params = httpClient.newParams();
-    	
-    	
-    	
+ 	
     	params.add( "email", email );
     	params.add( "password", password );
     	
@@ -80,13 +78,7 @@ public class LoginActivity extends LifeSyncActivity {
 					JSONObject userJSON = null;
 					try {
 						userJSON = new JSONObject(httpResponse.getBodyAsString());
-					} catch (JSONException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-//					loggedInUser = null;
-//					User user = new User();
-					try {
+
 						loggedInUser.setEmail(userJSON.getString("email"));
 						loggedInUser.setFirst_name(userJSON.getString("first_name"));
 						loggedInUser.setLast_name(userJSON.getString("last_name"));
@@ -95,10 +87,7 @@ public class LoginActivity extends LifeSyncActivity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-//					Log.i("LifeSync", "EMAIL: " + loggedInUser.getEmail());
-//					Log.i("LifeSync", "id: " + loggedInUser.getUserid());
-					
+		
 					Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
 					startActivity(loginIntent);
 				}
