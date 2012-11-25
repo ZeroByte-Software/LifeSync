@@ -20,6 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.zerobyte.lifesync.model.*;
+
+import org.json.*;
+
 
 public class LoginActivity extends Activity {
 	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
@@ -83,6 +87,25 @@ public class LoginActivity extends Activity {
 				
 				if( status == HTTP_OK )
 				{
+					JSONObject userJSON = null;
+					try {
+						userJSON = new JSONObject(httpResponse.getBodyAsString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					User user = new User();
+					try {
+						user.setEmail(userJSON.getString("email"));
+						user.setFirst_name(userJSON.getString("first_name"));
+						user.setLast_name(userJSON.getString("last_name"));
+						user.setUserid(userJSON.getInt("user_id"));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
 					Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
 					startActivity(loginIntent);
 				}

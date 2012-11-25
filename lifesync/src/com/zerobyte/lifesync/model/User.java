@@ -83,6 +83,10 @@ public class User
 		return fb_id;
 	}
 	
+	public int getUserid() {
+		return user_id;
+	}
+	
 	public void setUser_name(String theUserName)
 	{
 		user_name = theUserName;
@@ -116,6 +120,10 @@ public class User
 	public void setFBid(int theFBID)
 	{
 		fb_id = theFBID;
+	}
+	
+	public void setUserid(int id) {
+		user_id = id;
 	}
 	
 	

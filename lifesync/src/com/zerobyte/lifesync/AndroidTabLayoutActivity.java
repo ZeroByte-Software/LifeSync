@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -30,6 +31,8 @@ import android.widget.TextView;
 
 import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
+
+import com.zerobyte.lifesync.model.*;
 
 public class AndroidTabLayoutActivity extends Activity {
 
@@ -57,6 +60,8 @@ public class AndroidTabLayoutActivity extends Activity {
 
 	private String myBumpName = "LifeSync User";
 	private String myBumpData = "This is the data";
+	private String myBumpRcvdEmail = "";
+	private int myBumpRcvdUserID;
 
 	private final ServiceConnection connection = new ServiceConnection() {
 		@Override
@@ -98,6 +103,10 @@ public class AndroidTabLayoutActivity extends Activity {
 							"Data: "
 									+ new String(intent
 											.getByteArrayExtra("data")));
+					myBumpRcvdEmail = new String(intent
+							.getByteArrayExtra("data")).split(":")[0];
+					myBumpRcvdUserID = Integer.parseInt(new String(intent
+							.getByteArrayExtra("data")).split(":")[1]);
 				} else if (action.equals(BumpAPIIntents.MATCHED)) {
 					long channelID = intent
 							.getLongExtra("proposedChannelID", 0);
@@ -111,6 +120,13 @@ public class AndroidTabLayoutActivity extends Activity {
 					Log.i("LifeSync_Bump",
 							"Channel confirmed with "
 									+ api.userIDForChannelID(channelID));
+					// construct the data to send
+					myBumpData = "";
+					// TODO take real data from User class
+					myBumpData += "thisuser@email.com"; // email
+					myBumpData += ":"; // seperator
+					myBumpData += "41"; // user_id
+					
 					api.send(channelID, myBumpData.getBytes());
 				} else if (action.equals(BumpAPIIntents.NOT_MATCHED)) {
 					Log.i("LifeSync_Bump", "Not matched.");
@@ -297,7 +313,6 @@ public class AndroidTabLayoutActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 
 		switch (currentTab) {
 		case 0:
@@ -335,7 +350,6 @@ public class AndroidTabLayoutActivity extends Activity {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
@@ -361,7 +375,6 @@ public class AndroidTabLayoutActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 
 		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
