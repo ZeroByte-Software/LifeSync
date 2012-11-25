@@ -9,9 +9,7 @@ package com.zerobyte.lifesync;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-import com.turbomanage.httpclient.android.AndroidHttpClient;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -24,12 +22,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-public class RegisterActivity extends Activity {
-	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
-	final private int MAX_TIMEOUT = 5000;
-	final private int MAX_RETRIES = 1;
-	final private int HTTP_CREATED = 201;
-	final private int HTTP_CONFLICT = 409;
+public class RegisterActivity extends LifeSyncActivity {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -73,11 +66,8 @@ public class RegisterActivity extends Activity {
      */
 	private void register( String email, String password, String fName, String lName )
 	{
-		AndroidHttpClient httpClient = new AndroidHttpClient( SERVER_URL );
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
     	ParameterMap params = httpClient.newParams();
-    	
-    	httpClient.setReadTimeout( MAX_TIMEOUT );
-    	httpClient.setMaxRetries( MAX_RETRIES );
     	
     	params.add( "email", email );
     	params.add( "password", password );
@@ -91,12 +81,12 @@ public class RegisterActivity extends Activity {
 			public void onComplete( HttpResponse httpResponse ) {
 				int status = httpResponse.getStatus();
 				
-				if( status == HTTP_CREATED )
+				if( status == httpClient.HTTP_CREATED )
 				{
 					AccountCreatedDialogFragment dialog = new AccountCreatedDialogFragment();
 					dialog.show( getFragmentManager(), "accountCreated" );
 				}
-				else if( status == HTTP_CONFLICT )
+				else if( status == httpClient.HTTP_CONFLICT )
 				{
 					DuplicateEmailDialogFragment dialog = new DuplicateEmailDialogFragment();
 					dialog.show( getFragmentManager(), "duplicateEmail" );

@@ -32,9 +32,7 @@ import android.widget.TextView;
 import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
 
-import com.zerobyte.lifesync.model.*;
-
-public class AndroidTabLayoutActivity extends Activity {
+public class AndroidTabLayoutActivity extends LifeSyncActivity {
 
 	private LifeSyncApplication lfapp;
 
@@ -122,10 +120,13 @@ public class AndroidTabLayoutActivity extends Activity {
 									+ api.userIDForChannelID(channelID));
 					// construct the data to send
 					myBumpData = "";
+					
+					Log.i("LifeSync", "EMAIL: " + loggedInUser.getEmail());
+					Log.i("LifeSync", "id: " + loggedInUser.getUserid());
 					// TODO take real data from User class
-					myBumpData += "thisuser@email.com"; // email
+					myBumpData += loggedInUser.getEmail(); // email
 					myBumpData += ":"; // seperator
-					myBumpData += "41"; // user_id
+					myBumpData += loggedInUser.getUserid(); // user_id
 					
 					api.send(channelID, myBumpData.getBytes());
 				} else if (action.equals(BumpAPIIntents.NOT_MATCHED)) {

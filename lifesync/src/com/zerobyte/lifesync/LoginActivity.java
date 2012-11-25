@@ -9,28 +9,20 @@ package com.zerobyte.lifesync;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-import com.turbomanage.httpclient.android.AndroidHttpClient;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.zerobyte.lifesync.model.*;
-
 import org.json.*;
 
 
-public class LoginActivity extends Activity {
-	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
-	final private int MAX_TIMEOUT = 5000;
-	final private int MAX_RETRIES = 1;
-	final private int HTTP_OK = 200;
-	
+public class LoginActivity extends LifeSyncActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +60,10 @@ public class LoginActivity extends Activity {
      */
     private void login( String email, String password )
     {
-    	AndroidHttpClient httpClient = new AndroidHttpClient( SERVER_URL );
+    	final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
     	ParameterMap params = httpClient.newParams();
     	
-    	httpClient.setConnectionTimeout( MAX_TIMEOUT );
-    	httpClient.setReadTimeout( MAX_TIMEOUT );
-    	httpClient.setMaxRetries( MAX_RETRIES );
+    	
     	
     	params.add( "email", email );
     	params.add( "password", password );
@@ -85,7 +75,7 @@ public class LoginActivity extends Activity {
 			public void onComplete( HttpResponse httpResponse ) {
 				int status = httpResponse.getStatus();
 				
-				if( status == HTTP_OK )
+				if( status == httpClient.HTTP_OK )
 				{
 					JSONObject userJSON = null;
 					try {
@@ -94,17 +84,20 @@ public class LoginActivity extends Activity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					
-					User user = new User();
+//					loggedInUser = null;
+//					User user = new User();
 					try {
-						user.setEmail(userJSON.getString("email"));
-						user.setFirst_name(userJSON.getString("first_name"));
-						user.setLast_name(userJSON.getString("last_name"));
-						user.setUserid(userJSON.getInt("user_id"));
+						loggedInUser.setEmail(userJSON.getString("email"));
+						loggedInUser.setFirst_name(userJSON.getString("first_name"));
+						loggedInUser.setLast_name(userJSON.getString("last_name"));
+						loggedInUser.setUserid(userJSON.getInt("user_id"));
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					
+//					Log.i("LifeSync", "EMAIL: " + loggedInUser.getEmail());
+//					Log.i("LifeSync", "id: " + loggedInUser.getUserid());
 					
 					Intent loginIntent = new Intent(LoginActivity.this, AndroidTabLayoutActivity.class);
 					startActivity(loginIntent);
@@ -120,15 +113,5 @@ public class LoginActivity extends Activity {
 				e.printStackTrace();
 			}
     	});
-    }
-    
-    /*
-     * Displays toast with a specified string
-     */
-    public void showToast( String text )
-    {
-    	Context context = getApplicationContext();
-    	Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT);
-    	toast.show();
     }
 }
