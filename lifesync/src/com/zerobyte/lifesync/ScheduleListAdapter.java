@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -77,7 +78,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 		Resources rsc = getContext().getResources();
 		int AndroidGreen = rsc.getColor(android.R.color.holo_green_dark);
 		int AndroidBlue = rsc.getColor(android.R.color.holo_blue_dark);
-		int white = rsc.getColor(android.R.color.primary_text_dark);
+		int BlankWhite = Color.parseColor("#EEEEEE");
 
 		for (int i = 0; i < 7; i++) {
 			final int pos = position;
@@ -117,7 +118,8 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 			switch (time_slots_by_time.get(i).getStatus()) {
 			case 0: // Empty
 //				day_btn.setBackgroundColor(android.R.drawable.btn_default);
-				day_btn.setBackgroundColor(white);
+				day_btn.setBackgroundColor(BlankWhite);
+//				day_btn.getBackground().setColorFilter(Color.parseColor("#DDDDDD"), PorterDuff.Mode.DARKEN);
 				break;
 
 			case 1: // Self
