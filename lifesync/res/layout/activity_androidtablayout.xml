@@ -93,6 +93,8 @@
                     android:layout_below="@+id/weekly_header"
                     android:cacheColorHint="#00000000"
                     android:clickable="true"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
                     android:fadeScrollbars="true"
                     android:focusable="true" />
             </RelativeLayout>

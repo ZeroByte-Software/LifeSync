@@ -77,12 +77,12 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 		Resources rsc = getContext().getResources();
 		int AndroidGreen = rsc.getColor(android.R.color.holo_green_dark);
 		int AndroidBlue = rsc.getColor(android.R.color.holo_blue_dark);
+		int white = rsc.getColor(android.R.color.primary_text_dark);
 
-		
 		for (int i = 0; i < 7; i++) {
-		final int pos = position;
-		final int ind = i;
-			
+			final int pos = position;
+			final int ind = i;
+
 			Button day_btn = null;
 			switch (i) {
 			case 0:
@@ -116,7 +116,8 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 
 			switch (time_slots_by_time.get(i).getStatus()) {
 			case 0: // Empty
-				day_btn.setBackgroundColor(android.R.drawable.btn_default);
+//				day_btn.setBackgroundColor(android.R.drawable.btn_default);
+				day_btn.setBackgroundColor(white);
 				break;
 
 			case 1: // Self
@@ -128,16 +129,26 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 				break;
 			}
 
+			if (time_slots_data.get(pos).get(ind).getStatus() != 0) {
+				day_btn.setText(String.valueOf(time_slots_data.get(pos).get(ind).getEventIds()
+						.size()));
+			} else {
+				day_btn.setText("");
+			}
+
 			day_btn.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					if (time_slots_data.get(pos).get(ind).getStatus() != 0) {
-						Intent displayEventIntent = new Intent(v.getContext(), EventDisplayActivity.class);
-						displayEventIntent.putIntegerArrayListExtra (
-								"events_viewed",
-								time_slots_data.get(pos).get(ind).getEventIds());
-						System.out.println("HAHA");
-						System.out.println(time_slots_data.get(pos).get(ind).getEventIds());
-						((AndroidTabLayoutActivity) v.getContext()).startActivity(displayEventIntent);
+						Intent displayEventIntent = new Intent(v.getContext(),
+								EventDisplayActivity.class);
+						displayEventIntent
+								.putIntegerArrayListExtra("events_viewed",
+										time_slots_data.get(pos).get(ind)
+												.getEventIds());
+						System.out.println(time_slots_data.get(pos).get(ind)
+								.getEventIds());
+						((AndroidTabLayoutActivity) v.getContext())
+								.startActivity(displayEventIntent);
 					}
 				}
 

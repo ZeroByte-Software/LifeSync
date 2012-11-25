@@ -170,8 +170,8 @@ public class AndroidTabLayoutActivity extends Activity {
 		tabHost.addTab(bumpspec); // Adding bump tab
 		tabHost.setCurrentTab(0);
 
-		final int enabledGreen = getResources().getColor(android.R.color.holo_green_dark);
-		final int disabledRed = getResources().getColor(android.R.color.holo_red_dark);
+		final int AndroidGreen = getResources().getColor(android.R.color.holo_green_dark);
+		final int AndroidRed = getResources().getColor(android.R.color.holo_red_dark);
 		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
 			public void onTabChanged(String tabId) {
 				currentTab = tabHost.getCurrentTab();
@@ -219,7 +219,7 @@ public class AndroidTabLayoutActivity extends Activity {
 					((TextView) findViewById(R.id.statusBump))
 							.setText("Disabled");
 					((TextView) findViewById(R.id.statusBump))
-							.setTextColor(disabledRed);
+							.setTextColor(AndroidRed);
 				}
 			}
 		});
@@ -288,7 +288,7 @@ public class AndroidTabLayoutActivity extends Activity {
 					((TextView) findViewById(R.id.statusBump))
 							.setText("Enabled");
 					((TextView) findViewById(R.id.statusBump))
-							.setTextColor(enabledGreen);
+							.setTextColor(AndroidGreen);
 
 				} else {
 					// already enabled, disable
@@ -303,7 +303,7 @@ public class AndroidTabLayoutActivity extends Activity {
 					((TextView) findViewById(R.id.statusBump))
 							.setText("Disabled");
 					((TextView) findViewById(R.id.statusBump))
-							.setTextColor(disabledRed);
+							.setTextColor(AndroidRed);
 				}
 
 			}
