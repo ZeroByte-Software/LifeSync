@@ -21,17 +21,15 @@ public class Admin extends User {
 	}
 
 	/**
-	 * @param username
 	 * @param passwd
 	 * @param fname
 	 * @param lname
 	 * @param isAdmin
 	 * @param email
-	 * @param fbID
 	 */
 	public Admin(int userid, String username, String passwd, String fname, String lname,
 			boolean isAdmin, String email, int fbID) {
-		super(userid, username, passwd, fname, lname, isAdmin, email, fbID);
+		super(userid, username, passwd, fname, lname, isAdmin);
 		// TODO Auto-generated constructor stub
 	}
 	

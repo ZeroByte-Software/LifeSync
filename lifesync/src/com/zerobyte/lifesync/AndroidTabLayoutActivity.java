@@ -2,10 +2,7 @@ package com.zerobyte.lifesync;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -32,9 +29,8 @@ import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 
-import com.bump.api.IBumpAPI;
 import com.bump.api.BumpAPIIntents;
-import com.zerobyte.lifesync.RegisterActivity.AccountCreatedDialogFragment;
+import com.bump.api.IBumpAPI;
 
 public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
