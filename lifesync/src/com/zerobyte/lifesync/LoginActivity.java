@@ -51,6 +51,7 @@ public class LoginActivity extends LifeSyncActivityBase {
 				startActivity(registerIntent);
 			}
 		});
+		
     }
     
     @Override

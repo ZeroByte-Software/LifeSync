@@ -1,6 +1,5 @@
 package com.zerobyte.lifesync.model;
 
-import java.util.Vector;
 
 //Bean class used to hold data about a single restriction. 
 public class User {
@@ -24,10 +23,10 @@ public class User {
 	 * @param fname
 	 * @param lname
 	 * @param isAdmin
-	 * @param email
+	 * @param email 
 	 */
 	public User(int userid, String username, String passwd, String fname,
-			String lname, boolean isAdmin) {
+			String lname, boolean isAdmin, String email) {
 		this.user_id = userid;
 		this.password = passwd;
 		this.first_name = fname;
