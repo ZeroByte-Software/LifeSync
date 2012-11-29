@@ -18,13 +18,15 @@ public class User {
 		this.email = "";
 	}
 
-	/**
-	 * @param passwd
-	 * @param fname
-	 * @param lname
-	 * @param isAdmin
-	 * @param email 
-	 */
+	public User(User user) {
+		this.user_id = user.getUserid();
+		this.password = user.getPassword();
+		this.first_name = user.getFirst_name();
+		this.last_name = user.getLast_name();
+		this.is_admin = user.getIs_admin();
+		this.email = user.getEmail();
+	}
+	
 	public User(int userid, String username, String passwd, String fname,
 			String lname, boolean isAdmin, String email) {
 		this.user_id = userid;

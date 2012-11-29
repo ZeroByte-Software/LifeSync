@@ -19,6 +19,8 @@ package com.zerobyte.lifesync;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.zerobyte.lifesync.model.User;
+
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ public class ScreenSlidePageFragment extends Fragment {
 
     
     private LifeSyncApplication lfapp;
+    private User user;
 	HashMap<Integer, ScheduleEvent> schedule_data = null;
 	private ArrayList<Integer> schedule_id_list;
 	
@@ -69,6 +72,8 @@ public class ScreenSlidePageFragment extends Fragment {
         mPageNumber = getArguments().getInt(ARG_PAGE);
         
         lfapp = (LifeSyncApplication) getActivity().getApplication();
+        user = new User(lfapp.getUser());
+        		
 		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
 		schedule_id_list = ((EventDisplayActivity) getActivity()).get_schedule_id_list();
     }
@@ -81,10 +86,6 @@ public class ScreenSlidePageFragment extends Fragment {
                 .inflate(R.layout.event_page, container, false);
 
         // Set the title view to show the page number.
-//        ((TextView) rootView.findViewById(android.R.id.text1)).setText(
-//                mPageNumber + 1);
-        
-        
         TextView pageNumber = (TextView) rootView.findViewById(R.id.pageNumber);
 		int pos = mPageNumber + 1;
 		pageNumber.setText("Event " + pos + " of "
@@ -100,7 +101,11 @@ public class ScreenSlidePageFragment extends Fragment {
 		eventName.setText(se.getEvent_name());
 		eventLocation.setText(se.getEvent_location());
 		eventDescription.setText(se.getEvent_description());
-		eventOwner.setText(se.getEvent_owner());
+		if(se.getEvent_owner() == user.getUserid()) {
+			eventOwner.setText("Self");
+		} else {
+			eventOwner.setText(se.getEvent_owner());
+		}
 		
 		String event_start_time_str[] = se.getEvent_start_time().split("-");
 		String event_end_time_str[] = se.getEvent_end_time().split("-");
