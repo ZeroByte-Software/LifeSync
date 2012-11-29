@@ -124,7 +124,6 @@ public class ScreenSlidePageFragment extends Fragment {
 		TextView eventEnd = (TextView) rootView.findViewById(R.id.eventEnd);
 		eventStart.setText(day_of_week[event_start_time[0]] + " " + time_of_day[event_start_time[1]]);
 		eventEnd.setText(day_of_week[event_end_time[0]] + " " + time_of_day[event_end_time[1]]);
-		
 
         return rootView;
     }

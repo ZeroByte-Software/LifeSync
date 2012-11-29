@@ -72,7 +72,8 @@ public class EventDisplayActivity extends FragmentActivity {
 	private static final int EDIT_EVENT = 0;
 	
 	private boolean goback = false;
-
+	private boolean is_own_event = true;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -122,10 +123,13 @@ public class EventDisplayActivity extends FragmentActivity {
 				eventDescription.setText(se.getEvent_description());
 				if(se.getEvent_owner() == user.getUserid()) {
 					eventOwner.setText("Self");
+					is_own_event = true;
 				} else {
 					eventOwner.setText("Other");
 //					eventOwner.setText(se.getEvent_owner());
+					is_own_event = false;
 				}
+				invalidateOptionsMenu();
 				
 				String event_start_time_str[] = se.getEvent_start_time().split("-");
 				String event_end_time_str[] = se.getEvent_end_time().split("-");
@@ -146,53 +150,24 @@ public class EventDisplayActivity extends FragmentActivity {
 				
 			}
 		});
+		
+		if( user.getUserid() != schedule_data.get(schedule_id_list.get(0)).getEvent_owner()) {
+			is_own_event = false;
+			invalidateOptionsMenu();
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.menu_eventdisplay, menu);
-
-		// menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem()
-		// > 0);
-		//
-		// // Add either a "next" or "finish" button to the action bar,
-		// depending on which page
-		// // is currently selected.
-		// MenuItem item = menu.add(Menu.NONE, R.id.action_next, Menu.NONE,
-		// (mPager.getCurrentItem() == mPagerAdapter.getCount() - 1)
-		// ? R.string.action_finish
-		// : R.string.action_next);
-		// item.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-		// MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+		if (is_own_event) {
+			getMenuInflater().inflate(R.menu.menu_eventdisplay, menu);
+		}
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// switch (item.getItemId()) {
-		// case android.R.id.home:
-		// // Navigate "up" the demo structure to the launchpad activity.
-		// // See http://developer.android.com/design/patterns/navigation.html
-		// for more.
-		// NavUtils.navigateUpTo(this, new Intent(this, MainActivity.class));
-		// return true;
-		//
-		// case R.id.action_previous:
-		// // Go to the previous step in the wizard. If there is no previous
-		// step,
-		// // setCurrentItem will do nothing.
-		// mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-		// return true;
-		//
-		// case R.id.action_next:
-		// // Advance to the next step in the wizard. If there is no next step,
-		// setCurrentItem
-		// // will do nothing.
-		// mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-		// return true;
-		// }
-
 		switch (item.getItemId()) {
 		case R.id.editEvent_option:
 			// LOGIC TO EDIT EVENT
@@ -277,17 +252,6 @@ public class EventDisplayActivity extends FragmentActivity {
 		if(goback) {
 			onBackPressed();
 		}
-//		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
-//		time_slots_data.clear();
-//		for (int i = 0; i < 24; i++) {
-//			ArrayList<TimeSlot> time_slots_by_time = new ArrayList<TimeSlot>();
-//			for (int j = 0; j < 7; j++) {
-//				time_slots_by_time.add(new TimeSlot(0));
-//			}
-//			time_slots_data.add(time_slots_by_time);
-//		}
-//		update_time_slots_data();
-//		schedule_adapter.notifyDataSetChanged();
 	}
 	
 
@@ -322,6 +286,4 @@ public class EventDisplayActivity extends FragmentActivity {
 	public ArrayList<Integer> get_schedule_id_list() {
 		return schedule_id_list;
 	}
-	
-	
 }
