@@ -68,7 +68,7 @@ public class RegisterActivity extends LifeSyncActivityBase {
 	private void register( String email, String password, String fName, String lName )
 	{
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
-    	ParameterMap params = httpClient.newParams();
+    	ParameterMap params = httpClient.newParams();	// Parameters to send to server
     	
     	params.add( "email", email );
     	params.add( "password", password );
@@ -95,13 +95,14 @@ public class RegisterActivity extends LifeSyncActivityBase {
 					dialog.show( getFragmentManager(), "duplicateEmail" );
 				}
 				else
-					showToast( "Unknown error occured" );
+					showToast( "Sorry, an unknown error occured" );
 			}
     		
 			@Override
 			public void onError( Exception e )
 			{
-				showToast( "Server error. Please try again." );
+				showToast( "Sorry, a server error. Please try again." );
+				showToast( e.getMessage() );
 				e.printStackTrace();
 			}
     	});
@@ -109,7 +110,7 @@ public class RegisterActivity extends LifeSyncActivityBase {
 
     
     /*
-     * Creates dialog that displays when account is successfully created
+     * Creates a dialog that displays when account is successfully created
      */
     public class AccountCreatedDialogFragment extends DialogFragment {
         @Override
@@ -129,14 +130,13 @@ public class RegisterActivity extends LifeSyncActivityBase {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
         		Bundle savedInstanceState) {
-        	// TODO Auto-generated method stub
         	getDialog().setCanceledOnTouchOutside(false);
         	return super.onCreateView(inflater, container, savedInstanceState);
         }
     }
         
     /*
-     * Creates dialog that displays if email already exists in database
+     * Creates a dialog that displays if email already exists in database
      */
     public class DuplicateEmailDialogFragment extends DialogFragment {
         @Override

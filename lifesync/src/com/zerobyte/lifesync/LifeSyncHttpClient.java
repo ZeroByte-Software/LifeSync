@@ -1,8 +1,8 @@
 /* LifeSyncHttpClient.java
  * 
- * HTTP client class customized for LifeSync
+ * TurboManage HTTP client class customized for LifeSync
  * 
- * Source of TurboMange HTTP Client: https://turbomanage.wordpress.com/2012/06/12/a-basic-http-client-for-android-and-more/
+ * Source of TurboManage HTTP Client: https://turbomanage.wordpress.com/2012/06/12/a-basic-http-client-for-android-and-more/
  * Google Code: https://code.google.com/p/basic-http-client/
  */
 
@@ -11,9 +11,9 @@ package com.zerobyte.lifesync;
 import com.turbomanage.httpclient.android.AndroidHttpClient;
 
 public class LifeSyncHttpClient extends AndroidHttpClient  {
+	// HTTP Status Codes
 	public final int HTTP_OK = 200;
 	public final int HTTP_CREATED = 201;
-	public final int HTTP_BAD_REQUEST = 400;
 	public final int HTTP_CONFLICT = 409;
 	
 	LifeSyncHttpClient()

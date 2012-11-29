@@ -18,7 +18,6 @@ import android.widget.EditText;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-import com.zerobyte.lifesync.model.User;
 
 public class LoginActivity extends LifeSyncActivityBase {
 	
@@ -61,7 +60,8 @@ public class LoginActivity extends LifeSyncActivityBase {
 	@Override
 	public void onRestart() {
 		super.onRestart();
-
+		
+		// Allow properties of textbox to be used
 		final EditText editTxtEmail = (EditText) findViewById(R.id.loginEmail);
 		final EditText editTxtPassword = (EditText) findViewById(R.id.loginPassword);
 
@@ -75,7 +75,7 @@ public class LoginActivity extends LifeSyncActivityBase {
 	 */
 	private void login(String email, String password) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
-		ParameterMap params = httpClient.newParams();
+		ParameterMap params = httpClient.newParams();	// Parameters to send to server
 
 		params.add("email", email);
 		params.add("password", password);
@@ -87,6 +87,7 @@ public class LoginActivity extends LifeSyncActivityBase {
 				int status = httpResponse.getStatus();
 
 				if (status == httpClient.HTTP_OK) {
+					// Retrieve user information, and store for further use
 					JSONObject userJSON = null;
 					try {
 						userJSON = new JSONObject(httpResponse
@@ -103,7 +104,8 @@ public class LoginActivity extends LifeSyncActivityBase {
 						startActivity(loginIntent);
 						finish();
 					} catch (JSONException e) {
-						showToast("JSON exception occured. Canceling log in. " + e.getMessage());
+						showToast( "JSON exception occured. Login cancelled." );
+						showToast( e.getMessage() );
 						e.printStackTrace();
 					}
 				} else
@@ -112,7 +114,8 @@ public class LoginActivity extends LifeSyncActivityBase {
 
 			@Override
 			public void onError(Exception e) {
-				showToast("Server error. Please try again. " + e.getMessage());
+				showToast( "Sorry, a server error occured. Please try again." );
+				showToast( e.getMessage() );
 				e.printStackTrace();
 			}
 		});
