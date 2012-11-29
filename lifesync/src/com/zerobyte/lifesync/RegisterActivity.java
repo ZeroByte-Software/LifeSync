@@ -85,6 +85,7 @@ public class RegisterActivity extends LifeSyncActivityBase {
 				if( status == httpClient.HTTP_CREATED )
 				{
 					AccountCreatedDialogFragment dialog = new AccountCreatedDialogFragment();
+					dialog.setCancelable(false);
 					dialog.show( getFragmentManager(), "accountCreated" );
 					
 				}

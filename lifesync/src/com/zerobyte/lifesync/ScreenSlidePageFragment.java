@@ -104,7 +104,8 @@ public class ScreenSlidePageFragment extends Fragment {
 		if(se.getEvent_owner() == user.getUserid()) {
 			eventOwner.setText("Self");
 		} else {
-			eventOwner.setText(se.getEvent_owner());
+			eventOwner.setText("Other");
+//			eventOwner.setText(se.getEvent_owner());
 		}
 		
 		String event_start_time_str[] = se.getEvent_start_time().split("-");

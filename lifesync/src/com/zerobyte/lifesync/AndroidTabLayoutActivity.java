@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -283,16 +284,16 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 			
 			
+
+//			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
+//					"HERE1", "FIRST EVENT", user.getUserid(), -1);
+//			schedule_data.put(se.getEvent_id(), se);
+//			
+//			se = new ScheduleEvent("SECOND", "1-4", "2-6", "THERE2",
+//					"SECOND EVENT", user.getUserid(), -1);
+//			schedule_data.put(se.getEvent_id(), se);
+
 			getScheduleEventList(user);
-
-			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
-					"HERE1", "FIRST EVENT", user.getUserid(), -1);
-			schedule_data.put(se.getEvent_id(), se);
-			
-			se = new ScheduleEvent("SECOND", "1-4", "2-6", "THERE2",
-					"SECOND EVENT", user.getUserid(), -1);
-			schedule_data.put(se.getEvent_id(), se);
-
 			lfapp.saveSchedule(schedule_data);
 
 			init_flag = true;
@@ -312,29 +313,31 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			HashMap<String, String> curGroupMap = new HashMap<String, String>();
 			groupData.add(curGroupMap);
 			switch (i) {
-			case 0: {
+			case 0: 
 				curGroupMap.put(GROUP, "Friend Requests");
 				break;
-			}
-			case 1: {
+			
+			case 1:
 				curGroupMap.put(GROUP, "Friends");
 				break;
-			}
-			case 2: {
+		
+			case 2: 
 				curGroupMap.put(GROUP, "Friends Awaiting");
 				break;
-			}
+			
 			}
 
 			if (i == 0) {
 				ArrayList<Map<String, String>> children = new ArrayList<Map<String, String>>();
-				for (int j = 0; j < 5; j++) {
-					HashMap<String, String> curChildMap = new HashMap<String, String>();
-					children.add(curChildMap);
-					curChildMap.put(CHILD, (j % 2 == 0) ? "Eddy " + j : "Eton "
-							+ j);
-
-				}
+				
+//				for (int j = 0; j < 5; j++) {
+//					HashMap<String, String> curChildMap = new HashMap<String, String>();
+//					children.add(curChildMap);
+//					curChildMap.put(CHILD, (j % 2 == 0) ? "Eddy " + j : "Eton "
+//							+ j);
+//
+//				}
+				
 				childData.add(children);
 			} else {
 				ArrayList<Map<String, String>> children = new ArrayList<Map<String, String>>();
@@ -355,12 +358,15 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 																// describes the
 																// first-level
 																// entries
+				
 				android.R.layout.simple_expandable_list_item_1, // Layout for
 																// the
 																// first-level
 																// entries new
+				
 				new String[] { GROUP, CHILD }, // Key in the groupData maps to
 												// display
+				
 				new int[] { android.R.id.text1, android.R.id.text2 }, // Data
 																		// under
 																		// "colorName"
@@ -443,12 +449,12 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 				if (status == HTTP_OK) {
 
-					JSONArray jobj;
+					
 
 					String output = httpResponse.getBodyAsString();
 					try {
 						
-						jobj = new JSONArray(output);
+						JSONArray jobj = new JSONArray(output);
 						for (int i = 0; i < jobj.length(); i++) {
 							// showToast( "Output:" + jobj.getString(i));
 							output = jobj.getString(i);
@@ -456,7 +462,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							childData.get(1).add(curChildMap);
 							curChildMap.put(CHILD, output);
 							group_check_states.add(false);
-
 						}
 						
 						friendListView.setAdapter(mAdapter);
@@ -489,6 +494,8 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		httpClient.setMaxRetries(MAX_RETRIES);
 
 		params.add("email", queryuser.getEmail());
+		
+		final int queryuser_id = queryuser.getUserid();
 
 		// Contact server using POST via separate thread
 		httpClient.get("/schedule", params, new AsyncCallback() {
@@ -543,7 +550,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 //							Log.i("ETON", event_end_time);
 //							Log.i("ETON", "HAHAHAHAHHA Output: " + event_id + ", " + event_name + ", " + event_start_time + ", " + event_end_time);
 							
-							ScheduleEvent se = new ScheduleEvent(event_name, event_start_time, event_end_time, event_location, event_description, user.getUserid(), event_id);
+							ScheduleEvent se = new ScheduleEvent(event_name, event_start_time, event_end_time, event_location, event_description, queryuser_id, event_id);
 							schedule_data.put(se.getEvent_id(), se);
 						}
 					} catch (JSONException e) {
@@ -791,9 +798,19 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 								// viewHolder1.checkbox.setChecked(false);
 								if (viewHolder1.checkbox.isChecked()) {
 									group_check_states.set(childPosition, true);
+									
+									User friend_user = new User();
+									friend_user.setEmail("b@b.b");
+									friend_user.setUserid(81);
+									getScheduleEventList(friend_user);
+									
 								} else {
 									group_check_states
 											.set(childPosition, false);
+									
+									User friend_user = new User();
+									friend_user.setUserid(81);
+									removeFriendSchedule(friend_user);
 								}
 
 								// mAdapter.notifyDataSetChanged();
@@ -858,6 +875,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		super.onResume();
 
 		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
+		update_time_slots_data();
+		schedule_adapter.notifyDataSetChanged();
+	}
+
+	public void update_time_slots_data() {
 		time_slots_data.clear();
 		for (int i = 0; i < 24; i++) {
 			ArrayList<TimeSlot> time_slots_by_time = new ArrayList<TimeSlot>();
@@ -866,14 +888,17 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 			time_slots_data.add(time_slots_by_time);
 		}
-		update_time_slots_data();
-		schedule_adapter.notifyDataSetChanged();
-	}
-
-	public void update_time_slots_data() {
+		
 		if (schedule_data.size() > 0) {
 
 			for (ScheduleEvent se : schedule_data.values()) {
+				
+				int status = 1;
+				
+				if (se.getEvent_owner() != user.getUserid()) {
+					status = 2;
+				}
+				
 				// SUPPOSE FORMAT WAS: DAY-TIME
 				String event_start_time_str[] = se.getEvent_start_time().split(
 						"-");
@@ -891,15 +916,14 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						&& (event_start_time[1] == event_end_time[1])) {
 					for (int i = 0; i <= 6; i++) {
 						for (int j = 0; j <= 23; j++) {
-							time_slots_data.get(j).get(i).setStatus(1);
+							time_slots_data.get(j).get(i).setStatus(status);
 							time_slots_data.get(j).get(i).addEvent(se);
 						}
 					}
 					continue;
 				}
 
-				// If starttime is greater than endttime then start from
-				// monday-00:00 to endtime
+				// If starttime is greater than endttime then start from monday-00:00 to endtime
 				boolean sunday_midnight = false;
 				if ((event_start_time[0] > event_end_time[0])
 						|| ((event_start_time[0] == event_end_time[0]) && (event_start_time[0] > event_end_time[1]))) {
@@ -912,13 +936,13 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						}
 
 						for (int j = start; j < end; j++) {
-							time_slots_data.get(j).get(i).setStatus(1);
+							time_slots_data.get(j).get(i).setStatus(status);
 							time_slots_data.get(j).get(i).addEvent(se);
 						}
 
 						// SPECIAL CASE FOR 23:00-00:00
 						if (i < event_end_time[0]) {
-							time_slots_data.get(23).get(i).setStatus(1);
+							time_slots_data.get(23).get(i).setStatus(status);
 							time_slots_data.get(23).get(i).addEvent(se);
 						}
 					}
@@ -940,23 +964,39 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					}
 
 					for (int j = start; j < end; j++) {
-						time_slots_data.get(j).get(i).setStatus(1);
+						time_slots_data.get(j).get(i).setStatus(status);
 						time_slots_data.get(j).get(i).addEvent(se);
 					}
 
 					// SPECIAL CASE FOR 23:00-00:00
 					if (i < event_end_time[0]) {
-						time_slots_data.get(23).get(i).setStatus(1);
+						time_slots_data.get(23).get(i).setStatus(status);
 						time_slots_data.get(23).get(i).addEvent(se);
 					}
 				}
 
 				if (sunday_midnight) {
-					time_slots_data.get(23).get(6).setStatus(1);
+					time_slots_data.get(23).get(6).setStatus(status);
 					time_slots_data.get(23).get(6).addEvent(se);
 				}
 			}
 		}
+	}
+	
+	public void removeFriendSchedule(User friend_user) {
+		if (schedule_data.size() > 0) {
+			Iterator it = schedule_data.entrySet().iterator();
+			while (it.hasNext()) {
+		        Map.Entry pairs = (Map.Entry) it.next();
+		        if (((ScheduleEvent) pairs.getValue()).getEvent_owner() != user.getUserid()) {
+		        	it.remove();
+		        }
+		    }
+		}
+		
+		lfapp.saveSchedule(schedule_data);
+		update_time_slots_data();
+		schedule_adapter.notifyDataSetChanged();
 	}
 
 	@Override
@@ -996,12 +1036,15 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 									user = null; 
 									schedule_data.clear();
 									lfapp.saveSchedule(schedule_data);
-
-									// Close activity and open up new LoginActivity
-//									Intent backToLogin = new Intent(
-//											AndroidTabLayoutActivity.this,
-//											LoginActivity.class);
-//									startActivity(backToLogin);
+									time_slots_data.clear();
+									for (int i = 0; i < 24; i++) {
+										ArrayList<TimeSlot> time_slots_by_time = new ArrayList<TimeSlot>();
+										for (int j = 0; j < 7; j++) {
+											time_slots_by_time.add(new TimeSlot(0));
+										}
+										time_slots_data.add(time_slots_by_time);
+									}
+									
 									finish();
 								}
 							})
