@@ -142,7 +142,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="15dp"
                     android:gravity="center"
-                    android:text="Bump to merge your schedule with your friend!" />
+                    android:text="Bump to add your friend as a contact!" />
             </RelativeLayout>
         </FrameLayout>
     </LinearLayout>

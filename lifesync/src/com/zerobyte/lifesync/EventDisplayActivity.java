@@ -19,6 +19,8 @@ package com.zerobyte.lifesync;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.zerobyte.lifesync.model.User;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,6 +65,7 @@ public class EventDisplayActivity extends FragmentActivity {
 	
 	
 	private LifeSyncApplication lfapp;
+	private User user;
 	HashMap<Integer, ScheduleEvent> schedule_data;
 	private ArrayList<Integer> schedule_id_list;
 	
@@ -77,6 +80,7 @@ public class EventDisplayActivity extends FragmentActivity {
 
 		// Get handler to Application
 		lfapp = (LifeSyncApplication) getApplication();
+		user = new User(lfapp.getUser());
 		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
 
 		schedule_id_list = getIntent()
@@ -116,8 +120,11 @@ public class EventDisplayActivity extends FragmentActivity {
 				eventName.setText(se.getEvent_name());
 				eventLocation.setText(se.getEvent_location());
 				eventDescription.setText(se.getEvent_description());
-				eventOwner.setText(se.getEvent_owner());
-				
+				if(se.getEvent_owner() == user.getUserid()) {
+					eventOwner.setText("Self");
+				} else {
+					eventOwner.setText(se.getEvent_owner());
+				}
 				
 				String event_start_time_str[] = se.getEvent_start_time().split("-");
 				String event_end_time_str[] = se.getEvent_end_time().split("-");
@@ -199,8 +206,6 @@ public class EventDisplayActivity extends FragmentActivity {
 			event_data.put("event_end_time", se.getEvent_end_time());
 			event_data.put("event_location", se.getEvent_location());
 			event_data.put("event_description", se.getEvent_description());
-			event_data.put("event_owner", se.getEvent_owner());
-			event_data.put("event_id", String.valueOf(se.getEvent_id()));
 			EditEventIntent.putExtra("event_data", event_data);
 			startActivityForResult(EditEventIntent, EDIT_EVENT);
 			

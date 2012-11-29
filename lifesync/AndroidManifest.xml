@@ -7,11 +7,12 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="15" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-	<uses-permission android:name="android.permission.VIBRATE" /> 
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name="com.zerobyte.lifesync.LifeSyncApplication"
@@ -20,25 +21,33 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/title_activity_life_sync" >
+            android:label="@string/title_activity_life_sync"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".EventDisplayActivity" />
-        <activity android:name=".EventInputActivity" />
-        <activity android:name=".FriendListActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventDisplayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EventInputActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AndroidTabLayoutActivity"
-            android:label="@string/title_activity_life_sync" >
-        </activity>
-        <service android:name="com.bump.api.BumpAPI">
-	    	<intent-filter>
-	        	<action android:name="com.bump.api.IBumpAPI" />
-	    	</intent-filter>
-		</service>
+            android:label="@string/title_activity_life_sync"
+            android:screenOrientation="portrait" />
+
+        <service android:name="com.bump.api.BumpAPI" >
+            <intent-filter>
+                <action android:name="com.bump.api.IBumpAPI" />
+            </intent-filter>
+        </service>
     </application>
+
 </manifest>

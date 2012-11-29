@@ -100,6 +100,7 @@
             android:layout_weight="1"
             android:focusable="false"
             android:gravity="bottom|center_horizontal"
+            android:textColor="@android:color/primary_text_dark"
             android:textSize="10sp" />
     </LinearLayout>
 

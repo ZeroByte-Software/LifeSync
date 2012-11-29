@@ -6,22 +6,25 @@
 
 package com.zerobyte.lifesync;
 
-import com.turbomanage.httpclient.AsyncCallback;
-import com.turbomanage.httpclient.HttpResponse;
-import com.turbomanage.httpclient.ParameterMap;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
+
 
 public class RegisterActivity extends LifeSyncActivityBase {
-
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,6 +86,7 @@ public class RegisterActivity extends LifeSyncActivityBase {
 				{
 					AccountCreatedDialogFragment dialog = new AccountCreatedDialogFragment();
 					dialog.show( getFragmentManager(), "accountCreated" );
+					
 				}
 				else if( status == httpClient.HTTP_CONFLICT )
 				{
@@ -119,6 +123,14 @@ public class RegisterActivity extends LifeSyncActivityBase {
                    });
             // Create the AlertDialog object and return it
             return builder.create();
+        }
+        
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+        		Bundle savedInstanceState) {
+        	// TODO Auto-generated method stub
+        	getDialog().setCanceledOnTouchOutside(false);
+        	return super.onCreateView(inflater, container, savedInstanceState);
         }
     }
         

@@ -1,5 +1,8 @@
 package com.zerobyte.lifesync;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +26,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,21 +34,20 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
-
 import android.widget.ListView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TabHost;
-import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bump.api.BumpAPIIntents;
 import com.bump.api.IBumpAPI;
@@ -52,16 +55,16 @@ import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 import com.turbomanage.httpclient.android.AndroidHttpClient;
-import com.zerobyte.lifesync.AndroidTabLayoutActivity.MyExpandableListAdapter.ViewHolder;
+import com.zerobyte.lifesync.model.User;
 
 public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
-	private LifeSyncApplication lfapp;
-
+	
 	public int currentTab = 0;
 	private TabHost tabHost;
 
 	private static final int ADD_EVENT = 0;
+	
 
 	// SCHEDULE VARIABLES
 	boolean init_flag = false;
@@ -157,12 +160,12 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					// construct the data to send
 					myBumpData = "";
 
-					Log.i("LifeSync", "EMAIL: " + loggedInUser.getEmail());
-					Log.i("LifeSync", "id: " + loggedInUser.getUserid());
+					Log.i("LifeSync", "EMAIL: " + user.getEmail());
+					Log.i("LifeSync", "id: " + user.getUserid());
 					// TODO take real data from User class
-					myBumpData += loggedInUser.getEmail(); // email
+					myBumpData += user.getEmail(); // email
 					myBumpData += ":"; // seperator
-					myBumpData += loggedInUser.getUserid(); // user_id
+					myBumpData += user.getUserid(); // user_id
 
 					api.send(channelID, myBumpData.getBytes());
 				} else if (action.equals(BumpAPIIntents.NOT_MATCHED)) {
@@ -263,12 +266,12 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		});
 
-		// Get handler to Application
-		lfapp = (LifeSyncApplication) getApplication();
+		
 
 		// SCHEDULE LOGIC
 		schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
 		time_slots_data = new ArrayList<ArrayList<TimeSlot>>();
+		
 
 		if (!init_flag) {
 			for (int i = 0; i < 24; i++) {
@@ -278,12 +281,16 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				}
 				time_slots_data.add(time_slots_by_time);
 			}
+			
+			
+			getScheduleEventList(user);
 
 			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
-					"HERE1", "FIRST EVENT", "SELF");
+					"HERE1", "FIRST EVENT", user.getUserid(), -1);
 			schedule_data.put(se.getEvent_id(), se);
+			
 			se = new ScheduleEvent("SECOND", "1-4", "2-6", "THERE2",
-					"SECOND EVENT", "ALSOSELF");
+					"SECOND EVENT", user.getUserid(), -1);
 			schedule_data.put(se.getEvent_id(), se);
 
 			lfapp.saveSchedule(schedule_data);
@@ -296,16 +303,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				schedule_data);
 
 		schedule_listView = (ListView) findViewById(R.id.schedule_list);
-		// listView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-		// {
-		// public void onItemClick(AdapterView<?> parentView, View childView,
-		// int position, long id) {
-		//
-		// Intent displayEventIntent = new Intent(ScheduleActivity.this,
-		// EventDisplayActivity.class);
-		// startActivity(displayEventIntent);
-		// }
-		// });
 		schedule_listView.setAdapter(schedule_adapter);
 
 		// FRIEND LIST LOGIC
@@ -341,12 +338,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				childData.add(children);
 			} else {
 				ArrayList<Map<String, String>> children = new ArrayList<Map<String, String>>();
-
-				// HashMap<String, String> curChildMap = new HashMap<String,
-				// String>();
-				// children.add(curChildMap);
 				childData.add(children);
-
 			}
 
 		}
@@ -390,7 +382,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		friendListView = (ExpandableListView) findViewById(android.R.id.list);
 		friendListView.setAdapter(mAdapter);
 		friendListView.expandGroup(1);
-		getFriendList(loggedInUser.getEmail());
+		getFriendList(user.getEmail());
 
 		// BUMP LOGIC GOES HERE
 		final Button bumpbtn = (Button) findViewById(R.id.btnBump);
@@ -412,7 +404,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							.setTextColor(AndroidGreen);
 
 				} else {
-					// already enabled, disable
+					// already enabled, so disable
 					try {
 						api.disableBumping();
 					} catch (RemoteException e) {
@@ -455,6 +447,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 					String output = httpResponse.getBodyAsString();
 					try {
+						
 						jobj = new JSONArray(output);
 						for (int i = 0; i < jobj.length(); i++) {
 							// showToast( "Output:" + jobj.getString(i));
@@ -465,23 +458,18 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							group_check_states.add(false);
 
 						}
+						
 						friendListView.setAdapter(mAdapter);
 						friendListView = (ExpandableListView) findViewById(android.R.id.list);
 						friendListView.expandGroup(1);
-						Toast.makeText(getBaseContext(),
-								"Friends Added From DB!", Toast.LENGTH_LONG)
-								.show();
+						showToast("Friends Added From DB!");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					// Intent loginIntent = new
-					// Intent(AndroidTabLayoutActivity.this,
-					// AndroidTabLayoutActivity.class);
-					// startActivity(loginIntent);
-				} else
+				} else {
 					showToast("Cannot get friendlist. Please try again.");
+				}
 			}
 
 			@Override
@@ -491,7 +479,98 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		});
 	}
+	
+	private void getScheduleEventList(User queryuser) {
+		AndroidHttpClient httpClient = new AndroidHttpClient(SERVER_URL);
+		ParameterMap params = httpClient.newParams();
 
+		httpClient.setConnectionTimeout(MAX_TIMEOUT);
+		httpClient.setReadTimeout(MAX_TIMEOUT);
+		httpClient.setMaxRetries(MAX_RETRIES);
+
+		params.add("email", queryuser.getEmail());
+
+		// Contact server using POST via separate thread
+		httpClient.get("/schedule", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+
+				if (status == HTTP_OK) {
+					ArrayList<ScheduleEvent> eventList= new ArrayList<ScheduleEvent>();
+					
+					try {
+						JSONArray event = new JSONArray(httpResponse.getBodyAsString());
+
+						for (int i = 0; i < event.length(); i++) {
+							int event_id;
+							String event_name;
+							String event_start_time;
+							String event_end_time;
+							String event_location;
+							String event_description;
+							
+							event_id = event.getJSONObject(i).getInt("event_id");
+							event_name = event.getJSONObject(i).getString("name");
+							event_start_time = event.getJSONObject(i).getString("start_time");
+							event_end_time = event.getJSONObject(i).getString("end_time");
+							event_location = event.getJSONObject(i).getString("location");
+							event_description = event.getJSONObject(i).getString("description");
+							
+							SimpleDateFormat inFomatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:sss");
+							SimpleDateFormat outFormatter = new SimpleDateFormat("EEE-hh");
+							String get_time[];
+							
+							HashMap<String, String> day_of_week_map = new HashMap<String, String>();
+							day_of_week_map.put("Mon", "0");
+							day_of_week_map.put("Tue", "1");
+							day_of_week_map.put("Wed", "2");
+							day_of_week_map.put("Thu", "3");
+							day_of_week_map.put("Fri", "4");
+							day_of_week_map.put("Sat", "5");
+							day_of_week_map.put("Sun", "6");
+
+							Date date = inFomatter.parse(event_start_time);
+							get_time = outFormatter.format(date).split("-");
+							event_start_time = day_of_week_map.get(get_time[0]) + "-" + get_time[1];
+							
+							date = inFomatter.parse(event_end_time);
+							get_time = outFormatter.format(date).split("-");
+							event_end_time = day_of_week_map.get(get_time[0]) + "-" + get_time[1];
+							
+//							Log.i("ETON", "HAHAHAHAHHA Output: " + event_id + ", " + event_name + ", " + event_start_time + ", " + event_end_time);
+//							Log.i("ETON", event_start_time);
+//							Log.i("ETON", event_end_time);
+//							Log.i("ETON", "HAHAHAHAHHA Output: " + event_id + ", " + event_name + ", " + event_start_time + ", " + event_end_time);
+							
+							ScheduleEvent se = new ScheduleEvent(event_name, event_start_time, event_end_time, event_location, event_description, user.getUserid(), event_id);
+							schedule_data.put(se.getEvent_id(), se);
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					lfapp.saveSchedule(schedule_data);
+					update_time_slots_data();
+					schedule_adapter.notifyDataSetChanged();
+					
+				} else {
+					showToast("Cannot get schedule. Please try again.");
+				}
+			}
+
+			@Override
+			public void onError(Exception e) {
+				//showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -666,8 +745,8 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						// tv.setText("Clicked");
 						group_check_states.add(false);
 						mAdapter.notifyDataSetChanged();
-						Toast.makeText(getBaseContext(), "New Friend Added!",
-								Toast.LENGTH_LONG).show();
+						
+						showToast("New Friend Added!");
 					}
 				});
 
@@ -763,7 +842,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						event_data.get("event_start_time"),
 						event_data.get("event_end_time"),
 						event_data.get("event_location"),
-						event_data.get("event_description"), "Self");
+						event_data.get("event_description"), user.getUserid(), -1);
 
 				schedule_data.put(se.getEvent_id(), se);
 				// update_time_slots_data();
@@ -913,16 +992,16 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
-									loggedInUser = null; // Remove reference to
-															// currently logged
-															// in user
+									// Remove reference to currently logged in user
+									user = null; 
+									schedule_data.clear();
+									lfapp.saveSchedule(schedule_data);
 
-									// Close activity and open up new
-									// LoginActivity
-									Intent backToLogin = new Intent(
-											AndroidTabLayoutActivity.this,
-											LoginActivity.class);
-									startActivity(backToLogin);
+									// Close activity and open up new LoginActivity
+//									Intent backToLogin = new Intent(
+//											AndroidTabLayoutActivity.this,
+//											LoginActivity.class);
+//									startActivity(backToLogin);
 									finish();
 								}
 							})

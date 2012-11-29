@@ -6,22 +6,41 @@
 
 package com.zerobyte.lifesync;
 
+import com.zerobyte.lifesync.model.User;
+
 import android.app.Activity;
-import android.content.Context;
+import android.os.Bundle;
+import android.view.Gravity;
 import android.widget.Toast;
 
-import com.zerobyte.lifesync.model.*;
-
 public class LifeSyncActivityBase extends Activity {
-	protected static User loggedInUser = null;
 	
-    /*
-     * Displays toast with a specified string
-     */
-    public void showToast( String text )
-    {
-    	Context context = getApplicationContext();
-    	Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT);
-    	toast.show();
-    }
+	LifeSyncApplication lfapp;
+	User user;
+	
+	private Toast toast;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		
+		// Get handler to Application and user
+		lfapp = (LifeSyncApplication) getApplication();
+		user = new User(lfapp.getUser());
+				
+		// Setup toast
+		toast = Toast.makeText(getApplicationContext(),
+				"", Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.BOTTOM, 0, 0);
+		
+	}
+
+	/*
+	 * Displays toast with a specified string
+	 */
+	public void showToast(String text) {
+		toast.setText(text);
+		toast.show();
+	}
 }

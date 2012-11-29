@@ -2,6 +2,7 @@ package com.zerobyte.lifesync;
 
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -16,7 +17,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class EventInputActivity extends LifeSyncActivityBase implements
+public class EventInputActivity extends Activity implements
 		OnItemSelectedListener {
 
 	private Toast toast;
@@ -75,9 +76,9 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 		s_end_time.setOnItemSelectedListener(this);
 
 		// Toast setup
-		toast = toast.makeText(getApplicationContext(),
-				"Event end time is not after start time.", Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.BOTTOM, 0, 0);
+//		toast = Toast.makeText(getApplicationContext(),
+//				"Event end time is not after start time.", Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.BOTTOM, 0, 0);
 
 		HashMap<String, String> event_data = (HashMap<String, String>) getIntent()
 				.getSerializableExtra("event_data");
