@@ -1,6 +1,14 @@
 package com.zerobyte.lifesync;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,12 +25,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class EventInputActivity extends Activity implements
+public class EventInputActivity extends LifeSyncActivityBase implements
 		OnItemSelectedListener {
 
-	private Toast toast;
-
 	private String edit_event_id;
+	private boolean inProcess = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +125,10 @@ public class EventInputActivity extends Activity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
 
-		new MenuInflater(this).inflate(R.menu.menu_eventinput, menu);
+		if (!inProcess) {
+			new MenuInflater(this).inflate(R.menu.menu_eventinput, menu);
+		}
+		
 
 		return (super.onCreateOptionsMenu(menu));
 	}
@@ -128,6 +138,9 @@ public class EventInputActivity extends Activity implements
 
 		switch (item.getItemId()) {
 		case R.id.OK_option:
+			inProcess = true;
+			invalidateOptionsMenu();
+
 			int start_day_pos = ((Spinner) findViewById(R.id.event_start_day_spinner))
 					.getSelectedItemPosition();
 			int start_time_pos = ((Spinner) findViewById(R.id.event_start_time_spinner))
@@ -137,19 +150,7 @@ public class EventInputActivity extends Activity implements
 			int end_time_pos = ((Spinner) findViewById(R.id.event_end_time_spinner))
 					.getSelectedItemPosition();
 
-			// if (start_day_pos > end_day_pos) {
-			// toast.show();
-			// break;
-			// } else {
-			// if(start_day_pos == end_day_pos) {
-			// if(start_time_pos >= end_time_pos) {
-			// toast.show();
-			// break;
-			// }
-			// }
-			// }
-
-			HashMap<String, String> event_data = new HashMap<String, String>();
+			final HashMap<String, String> event_data = new HashMap<String, String>();
 			event_data.put("event_name",
 					((EditText) findViewById(R.id.event_name)).getText()
 							.toString());
@@ -162,15 +163,72 @@ public class EventInputActivity extends Activity implements
 			event_data.put("event_description",
 					((EditText) findViewById(R.id.event_description)).getText()
 							.toString());
-
-			if (edit_event_id != null) {
+			
+			if (edit_event_id == null) {
+				// ADDING NEW NOT EDITING
+				
+				final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+				ParameterMap params = httpClient.newParams();
+				
+				String startDateTime, endDateTime;
+				
+				// Use dummy date: Oct. 1, 2012 = Monday, Oct. 2, 2012 = Tuesday, etc.
+				startDateTime = "2012-10-0" + (start_day_pos + 1);
+				endDateTime = "2012-10-0" + (end_day_pos + 1);
+				if( start_time_pos < 10 ) {
+					startDateTime += " 0" + start_time_pos + ":00:00";	// Time format: 0x:00:00
+				} else {
+					startDateTime += start_time_pos + ":00:00";	// Time format: xx:00:00
+				}
+				if( end_time_pos < 10 ) {
+					endDateTime += " 0" + start_time_pos + ":00:00";
+				} else {
+						endDateTime += start_time_pos + ":00:00";
+				}
+				
+				params.add("user_id", "" + user.getUserid());
+				params.add("event_name", ((EditText) findViewById(R.id.event_name)).getText().toString());
+				params.add("event_start_time", startDateTime);
+				params.add("event_end_time", endDateTime);
+				params.add("event_location", ((EditText) findViewById(R.id.event_location)).getText().toString());
+				params.add("event_description", ((EditText) findViewById(R.id.event_description)).getText().toString());
+				
+				// Contact server using POST via separate thread
+				httpClient.post("/inputEvent", params, new AsyncCallback() {
+					@Override
+					public void onComplete(HttpResponse httpResponse) {
+						int status = httpResponse.getStatus();
+	
+						if (status == httpClient.HTTP_CREATED)
+						{
+							Intent resultIntent = new Intent();
+							resultIntent.putExtra("event_data", event_data);
+							setResult(RESULT_OK, resultIntent);
+							showToast( "Event successfully created!");
+							finish();
+						}
+						else {
+							showToast("Error adding event.");
+							inProcess = false;
+							invalidateOptionsMenu();
+						}
+					}
+	
+					@Override
+					public void onError(Exception e) {
+						showToast( "Server error. Please try again. " + e.getMessage());
+						e.printStackTrace();
+						inProcess = false;
+						invalidateOptionsMenu();
+					}
+				});
+			} else {
 				event_data.put("event_id", edit_event_id);
+				Intent resultIntent = new Intent();
+				resultIntent.putExtra("event_data", event_data);
+				setResult(RESULT_OK, resultIntent);
+				finish();
 			}
-
-			Intent resultIntent = new Intent();
-			resultIntent.putExtra("event_data", event_data);
-			setResult(RESULT_OK, resultIntent);
-			finish();
 			break;
 
 		case R.id.CANCEL_option:
@@ -181,7 +239,6 @@ public class EventInputActivity extends Activity implements
 
 		default:
 			return super.onOptionsItemSelected(item);
-
 		}
 
 		return true;

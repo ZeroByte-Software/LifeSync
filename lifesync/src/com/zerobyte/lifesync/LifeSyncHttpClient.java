@@ -13,6 +13,7 @@ import com.turbomanage.httpclient.android.AndroidHttpClient;
 public class LifeSyncHttpClient extends AndroidHttpClient  {
 	public final int HTTP_OK = 200;
 	public final int HTTP_CREATED = 201;
+	public final int HTTP_BAD_REQUEST = 400;
 	public final int HTTP_CONFLICT = 409;
 	
 	LifeSyncHttpClient()

@@ -283,8 +283,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				time_slots_data.add(time_slots_by_time);
 			}
 			
-			
-
 //			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
 //					"HERE1", "FIRST EVENT", user.getUserid(), -1);
 //			schedule_data.put(se.getEvent_id(), se);
