@@ -36,6 +36,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -223,6 +224,14 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				currentTab = tabHost.getCurrentTab();
 				invalidateOptionsMenu();
 
+				
+				if (currentTab == 1) {
+					// Expand all friend groups
+					friendListView.expandGroup(0);
+					friendListView.expandGroup(1);
+					friendListView.expandGroup(2);
+				} 
+				
 				if (currentTab != 2) {
 					// not within bump tab
 					if (isBumpEnabled) {
@@ -308,6 +317,8 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		schedule_listView.setAdapter(schedule_adapter);
 
 		// FRIEND LIST LOGIC
+		
+		
 		groupData = new ArrayList<Map<String, String>>();
 
 		for (int i = 0; i < 3; i++) {
@@ -353,6 +364,10 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				group_check_states.add(false);
 			}
 		}
+		
+		getPendFriendList(user.getEmail());
+		getFriendList(user.getEmail());
+		getARFriendList(user.getEmail());
 
 		// Setup adapter
 		mAdapter = new MyExpandableListAdapter(this, groupData, // groupData
@@ -388,10 +403,8 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 		friendListView = (ExpandableListView) findViewById(android.R.id.list);
 		friendListView.setAdapter(mAdapter);
-		friendListView.expandGroup(1);
-		getPendFriendList(user.getEmail());
-		getFriendList(user.getEmail());
-		getARFriendList(user.getEmail());
+
+		
 		// BUMP LOGIC GOES HERE
 		final Button bumpbtn = (Button) findViewById(R.id.btnBump);
 		bumpbtn.setOnClickListener(new View.OnClickListener() {
@@ -475,11 +488,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							//group_check_states.add(false);
 						}
 						
-						friendListView.setAdapter(mAdapter);
-						friendListView = (ExpandableListView) findViewById(android.R.id.list);
-						friendListView.expandGroup(1);
-						showToast( "Output:" + output.toString());
-						showToast("Friends Added From DB!");
+						showToast("ARFriends Added From DB!");
 						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -541,10 +550,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							friendlist.add(userFriend);
 							group_check_states.add(false);
 						}
-						
-						friendListView.setAdapter(mAdapter);
-						friendListView = (ExpandableListView) findViewById(android.R.id.list);
-						friendListView.expandGroup(1);
+
 						showToast("Friends Added From DB!");
 						//showToast( "Output:" + output.toString());
 					} catch (JSONException e) {
@@ -608,10 +614,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							//group_check_states.add(false);
 						}
 						
-						friendListView.setAdapter(mAdapter);
-						friendListView = (ExpandableListView) findViewById(android.R.id.list);
-						friendListView.expandGroup(1);
-						showToast("Friends Added From DB!");
+						showToast("Pending Friends Added From DB!");
 						//showToast( "Output:" + output.toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -677,7 +680,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						friendListView.setAdapter(mAdapter);
 						//mAdapter.notifyDataSetChanged();
 						friendListView = (ExpandableListView) findViewById(android.R.id.list);
-						friendListView.expandGroup(1);
+						friendListView.expandGroup(2);
 						//showToast("Friends Added From DB!");
 						showToast( "Output:" + output.toString());
 					} catch (JSONException e) {
@@ -711,6 +714,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				int status = httpResponse.getStatus();
 
 				if (status == HTTP_OK) {
+					ArrayList<ScheduleEvent> eventList= new ArrayList<ScheduleEvent>();
 					
 					try {
 						JSONArray event = new JSONArray(httpResponse.getBodyAsString());
@@ -730,7 +734,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							event_location = event.getJSONObject(i).getString("location");
 							event_description = event.getJSONObject(i).getString("description");
 							
-							SimpleDateFormat inFomatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:sss");
+							SimpleDateFormat inFomatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:sss");
 							SimpleDateFormat outFormatter = new SimpleDateFormat("EEE-HH");
 							String get_time[];
 							
@@ -750,11 +754,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							date = inFomatter.parse(event_end_time);
 							get_time = outFormatter.format(date).split("-");
 							event_end_time = day_of_week_map.get(get_time[0]) + "-" + get_time[1];
-							
-//							Log.i("ETON", "HAHAHAHAHHA Output: " + event_id + ", " + event_name + ", " + event_start_time + ", " + event_end_time);
-//							Log.i("ETON", event_start_time);
-//							Log.i("ETON", event_end_time);
-//							Log.i("ETON", "HAHAHAHAHHA Output: " + event_id + ", " + event_name + ", " + event_start_time + ", " + event_end_time);
 							
 							ScheduleEvent se = new ScheduleEvent(event_name, event_start_time, event_end_time, event_location, event_description, queryuser_id, event_id);
 							schedule_data.put(se.getEvent_id(), se);
@@ -821,7 +820,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void showAddFriendPopUp() {
 
 		final AlertDialog.Builder friendBuilder = new AlertDialog.Builder(this);
@@ -949,6 +948,12 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 										.get(childPosition).get(mChildFrom[1]));
 						childData.get(0).remove(childPosition);
 						group_check_states.add(false);
+						
+						// Move from ARfriendlist to friendlist
+						friendlist.add(ARfriendlist.get(childPosition));
+						ARfriendlist.remove(childPosition);
+						
+						
 						mAdapter.notifyDataSetChanged();
 						
 						showToast("New Friend Added!");
@@ -1010,6 +1015,47 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				ViewHolder holder1 = (ViewHolder) view.getTag();
 				holder1.text.setText((String) mChildData.get(groupPosition)
 						.get(childPosition).get(mChildFrom[1]));
+				// holder1.checkbox.setChecked(((View)
+				// mChildData.get(groupPosition).get(childPosition)).isSelected());
+				
+				view.setOnLongClickListener(new OnLongClickListener() {
+					
+					@Override
+					public boolean onLongClick(View v) {
+						// TODO Auto-generated method stub
+						
+						// LOGIC TO REMOVE FRIEND
+						AlertDialog.Builder builder = new AlertDialog.Builder(mcontext);
+						builder.setCancelable(true);
+						builder.setMessage("Delete Friend?");
+						builder.setInverseBackgroundForced(true);
+						builder.setNegativeButton("Cancel",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
+										dialog.dismiss();
+									}
+								});
+						builder.setPositiveButton("Delete",
+								new DialogInterface.OnClickListener() {
+									public void onClick(DialogInterface dialog, int which) {
+										HashMap<String, String> curChildMap = new HashMap<String, String>();
+										childData.get(1).remove(childPosition);
+										group_check_states.remove(childPosition);
+										mAdapter.notifyDataSetChanged();
+										
+										showToast("Friend removed.");
+									}
+								});
+						AlertDialog alert = builder.create();
+						alert.show();
+						
+						
+						
+						
+						return true;
+					}
+				});
+				
 				break;
 
 			case 2:
