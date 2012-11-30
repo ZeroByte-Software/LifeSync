@@ -132,7 +132,6 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 			new MenuInflater(this).inflate(R.menu.menu_eventinput, menu);
 		}
 		
-
 		return (super.onCreateOptionsMenu(menu));
 	}
 
@@ -167,9 +166,34 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 					((EditText) findViewById(R.id.event_description)).getText()
 							.toString());
 			
+			
+			// CHECK BOUNDARIES
+			boolean allowable = true;
+			if (!((end_day_pos + end_time_pos) == 0)) {
+				// does not end on Sun 00:00
+				
+				if (start_day_pos > end_day_pos) {
+					allowable = false;
+				}
+				if ((start_day_pos == end_day_pos) && (start_time_pos >= end_time_pos)) {
+					allowable = false;
+				}
+				if ((start_day_pos == end_day_pos) && (start_time_pos == end_time_pos)) {
+					allowable = false;
+				}
+			}
+			
+			if(!allowable) {
+				showToast("Please choose start and end times correctly.");
+				inProcess = false;
+				invalidateOptionsMenu();
+				break;
+			} 
+			
+			
+			
 			if (edit_event_id == null) {
 				// ADDING NEW NOT EDITING
-				
 				final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 				ParameterMap params = httpClient.newParams();
 				
