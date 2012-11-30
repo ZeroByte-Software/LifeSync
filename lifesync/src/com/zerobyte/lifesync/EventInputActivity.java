@@ -2,6 +2,10 @@ package com.zerobyte.lifesync;
 
 import java.util.HashMap;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -212,15 +216,32 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 				params.add("event_location", ((EditText) findViewById(R.id.event_location)).getText().toString());
 				params.add("event_description", ((EditText) findViewById(R.id.event_description)).getText().toString());
 				
-				// Contact server using POST via separate thread
-				httpClient.post("/inputEvent", params, new AsyncCallback() {
+				// Contact server using GET via separate thread
+				httpClient.get("/inputEvent", params, new AsyncCallback() {
 					@Override
 					public void onComplete(HttpResponse httpResponse) {
 						int status = httpResponse.getStatus();
 	
 						if (status == httpClient.HTTP_CREATED)
 						{
+							String event = httpResponse.getBodyAsString();
+							JSONArray events = null;
+							String eventID = null;
+							try
+							{
+								events = new JSONArray( event );
+								JSONObject createdEvent = events.getJSONObject(0);
+								eventID = createdEvent.getString( "event_id" );
+							}
+							catch( JSONException e )
+							{
+								showToast( "JSON exception occured. Event input cancelled." );
+								showToast( e.getMessage() );
+								e.printStackTrace();
+							}
+							
 							Intent resultIntent = new Intent();
+							event_data.put( "event_id", eventID );
 							resultIntent.putExtra("event_data", event_data);
 							setResult(RESULT_OK, resultIntent);
 							showToast( "Event successfully created!");
