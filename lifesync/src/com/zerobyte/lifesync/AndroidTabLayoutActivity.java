@@ -141,14 +141,14 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							"Received data from: "
 									+ api.userIDForChannelID(intent
 											.getLongExtra("channelID", 0)));
-					Log.i("LifeSync_Bump",
-							"Data: "
-									+ new String(intent
-											.getByteArrayExtra("data")));
 					myBumpRcvdEmail = new String(
 							intent.getByteArrayExtra("data")).split(":")[0];
 					myBumpRcvdUserID = Integer.parseInt(new String(intent
 							.getByteArrayExtra("data")).split(":")[1]);
+					
+					// TODO add friend using myBumpRcvdEmail
+					// addNewFriend(myBumpRcvdEmail) ??
+					
 				} else if (action.equals(BumpAPIIntents.MATCHED)) {
 					long channelID = intent
 							.getLongExtra("proposedChannelID", 0);
@@ -177,7 +177,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					Log.i("LifeSync_Bump", "Not matched.");
 				} else if (action.equals(BumpAPIIntents.CONNECTED)) {
 					Log.i("LifeSync_Bump", "Connected to Bump...");
-					// api.enableBumping(); // wait till app to enable
 				}
 			} catch (RemoteException e) {
 
@@ -233,16 +232,13 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				} 
 				
 				if (currentTab != 2) {
-					// not within bump tab
+					// not within bump tab, disable bump
 					if (isBumpEnabled) {
 						try {
 							api.disableBumping();
 						} catch (RemoteException e) {
 							Log.w("LifeSync_Bump", e);
 						}
-
-						// unbindService(connection);
-						// unregisterReceiver(receiver);
 
 						isBumpEnabled = false;
 					}
@@ -262,12 +258,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 						isBumpInit = true;
 					}
-					// disable the api until user clicks the bump button
-					// try {
-					// api.disableBumping();
-					// } catch (RemoteException e) {
-					// Log.w("LifeSync_Bump", e);
-					// }
+
 					isBumpEnabled = false;
 					((Button) findViewById(R.id.btnBump))
 							.setText("Enable Bump");
