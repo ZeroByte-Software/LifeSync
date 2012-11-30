@@ -1,19 +1,10 @@
 package com.zerobyte.lifesync;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.turbomanage.httpclient.AsyncCallback;
-import com.turbomanage.httpclient.HttpResponse;
-import com.turbomanage.httpclient.ParameterMap;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -209,9 +200,9 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 					startDateTime += start_time_pos + ":00:00";	// Time format: xx:00:00
 				}
 				if( end_time_pos < 10 ) {
-					endDateTime += "0" + start_time_pos + ":00:00";
+					endDateTime += "0" + end_time_pos + ":00:00";
 				} else {
-						endDateTime += start_time_pos + ":00:00";
+						endDateTime += end_time_pos + ":00:00";
 				}
 				
 				params.add("user_id", "" + user.getUserid());
