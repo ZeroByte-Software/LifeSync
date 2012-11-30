@@ -33,7 +33,7 @@
 		android:layout_alignParentRight="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Deny" 
+        android:text="@string/deny" 
         android:textColor="#000000"/>
      
      <Button  android:id="@+id/confirm_btn"
@@ -43,7 +43,7 @@
         android:layout_toLeftOf="@id/deny_btn"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:text="Confirm" 
+        android:text="@string/confirm" 
         android:textColor="#000000"/>
 
 </RelativeLayout> 
