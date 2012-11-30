@@ -23,7 +23,10 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
 
 public class EventInputActivity extends LifeSyncActivityBase implements
 		OnItemSelectedListener {
@@ -174,15 +177,15 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 				
 				// Using dummy date since we never actually use specific dates, only days of the week.
 				// Oct. 1, 2012 = Monday, Oct. 2, 2012 = Tuesday, etc.
-				startDateTime = "2012-10-0" + (start_day_pos + 1);
-				endDateTime = "2012-10-0" + (end_day_pos + 1);
+				startDateTime = "2012-10-0" + (start_day_pos + 1) + " ";
+				endDateTime = "2012-10-0" + (end_day_pos + 1) + " ";
 				if( start_time_pos < 10 ) {
-					startDateTime += " 0" + start_time_pos + ":00:00";	// Time format: 0x:00:00
+					startDateTime += "0" + start_time_pos + ":00:00";	// Time format: 0x:00:00
 				} else {
 					startDateTime += start_time_pos + ":00:00";	// Time format: xx:00:00
 				}
 				if( end_time_pos < 10 ) {
-					endDateTime += " 0" + start_time_pos + ":00:00";
+					endDateTime += "0" + start_time_pos + ":00:00";
 				} else {
 						endDateTime += start_time_pos + ":00:00";
 				}

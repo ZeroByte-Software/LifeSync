@@ -104,7 +104,14 @@ public class ScreenSlidePageFragment extends Fragment {
 		if(se.getEvent_owner() == user.getUserid()) {
 			eventOwner.setText("Self");
 		} else {
-			eventOwner.setText("Other");
+			for (User u: lfapp.getFriendlist()) {
+				if (u.getUserid() == se.getEvent_owner()) {
+					eventOwner.setText(u.getFirst_name() + " " + u.getLast_name());
+					break;
+				}
+			}
+			
+//			eventOwner.setText("Other");
 //			eventOwner.setText(se.getEvent_owner());
 		}
 		
