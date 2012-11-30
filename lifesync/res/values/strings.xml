@@ -16,13 +16,13 @@
     <string name="ok">OK</string>
     <string name="dialogAccountCreated">Your account has been created. You may now login and create a new schedule.</string>   
     <string-array name="day_of_week">
+        <item>Sunday</item>
         <item>Monday</item>
         <item>Tuesday</item>
         <item>Wednesday</item>
         <item>Thursday</item>
         <item>Friday</item>
         <item>Saturday</item>
-        <item>Sunday</item>
     </string-array>
     <string-array name="time_of_day">
         <item>00:00</item>

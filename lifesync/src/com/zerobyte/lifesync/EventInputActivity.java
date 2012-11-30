@@ -176,9 +176,9 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 				String startDateTime, endDateTime;
 				
 				// Using dummy date since we never actually use specific dates, only days of the week.
-				// Oct. 1, 2012 = Monday, Oct. 2, 2012 = Tuesday, etc.
-				startDateTime = "2012-10-0" + (start_day_pos + 1) + " ";
-				endDateTime = "2012-10-0" + (end_day_pos + 1) + " ";
+				// Nov. 18, 2012 = Sunday, Nov. 24, 2012 = Saturday, etc.
+				startDateTime = "2012-11-" + (start_day_pos + 18) + " ";
+				endDateTime = "2012-11-" + (end_day_pos + 18) + " ";
 				if( start_time_pos < 10 ) {
 					startDateTime += "0" + start_time_pos + ":00:00";	// Time format: 0x:00:00
 				} else {
