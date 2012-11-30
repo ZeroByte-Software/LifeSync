@@ -19,24 +19,24 @@ import android.widget.TextView;
 
 public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> {
 
+	LifeSyncApplication lfapp;
+	
 	private Context context;
-	private HashMap<Integer, ScheduleEvent> schedule_data = null;
-	private List<ArrayList<TimeSlot>> time_slots_data = null;
+	private HashMap<Integer, ScheduleEvent> schedule_data;
+	private List<ArrayList<TimeSlot>> time_slots_data;
 
 	static class ViewHolder {
-
 		public TextView time_slot_tv;
 		public Button mon_btn, tue_btn, wed_btn, thu_btn, fri_btn, sat_btn,
 				sun_btn;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public ScheduleListAdapter(Context context, List time_slots_data,
-			HashMap<Integer, ScheduleEvent> schedule_data) {
+	public ScheduleListAdapter(Context context, List time_slots_data, LifeSyncApplication lfapp) {
 		super(context, R.layout.schedule_row, time_slots_data);
 		this.context = context;
 		this.time_slots_data = time_slots_data;
-		this.schedule_data = schedule_data;
+		this.lfapp = lfapp;
 	}
 
 	@Override
@@ -78,6 +78,7 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 		Resources rsc = getContext().getResources();
 		int AndroidGreen = rsc.getColor(android.R.color.holo_green_dark);
 		int AndroidBlue = rsc.getColor(android.R.color.holo_blue_dark);
+		int AndroidRed = rsc.getColor(android.R.color.holo_red_dark);
 		int BlankWhite = Color.parseColor("#EEEEEE");
 
 		for (int i = 0; i < 7; i++) {
@@ -115,7 +116,20 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 				break;
 			}
 
-			switch (time_slots_by_time.get(i).getStatus()) {
+			int slot_color = time_slots_by_time.get(i).getStatus();
+			if (slot_color == 2) {
+				schedule_data = new HashMap<Integer, ScheduleEvent>(lfapp.getSchedule());
+				for (Integer ei: time_slots_by_time.get(i).getEventIds()) {
+					if (schedule_data.get(ei).getEvent_owner() == lfapp.getUser().getUserid())
+					{
+						slot_color = 3;
+						break;
+					}
+				}
+					
+			}
+			
+			switch (slot_color) {
 			case 0: // Empty
 //				day_btn.setBackgroundColor(android.R.drawable.btn_default);
 				day_btn.setBackgroundColor(BlankWhite);
@@ -126,8 +140,12 @@ public class ScheduleListAdapter extends ArrayAdapter<ArrayList<ScheduleEvent>> 
 				day_btn.setBackgroundColor(AndroidGreen);
 				break;
 
-			default: // Else
+			case 2: // Self
 				day_btn.setBackgroundColor(AndroidBlue);
+				break;
+				
+			default: // Else
+				day_btn.setBackgroundColor(AndroidRed);
 				break;
 			}
 

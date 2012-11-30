@@ -147,6 +147,12 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					// TODO add friend using myBumpRcvdEmail
 					addNewFriend(myBumpRcvdEmail);
 					
+					mAdapter.notifyDataSetChanged();
+					showToast("New Friend Added!");
+					
+					
+					
+					
 				} else if (action.equals(BumpAPIIntents.MATCHED)) {
 					long channelID = intent
 							.getLongExtra("proposedChannelID", 0);
@@ -284,14 +290,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				time_slots_data.add(time_slots_by_time);
 			}
 			
-//			ScheduleEvent se = new ScheduleEvent("FIRST", "1-4", "2-6",
-//					"HERE1", "FIRST EVENT", user.getUserid(), -1);
-//			schedule_data.put(se.getEvent_id(), se);
-//			
-//			se = new ScheduleEvent("SECOND", "1-4", "2-6", "THERE2",
-//					"SECOND EVENT", user.getUserid(), -1);
-//			schedule_data.put(se.getEvent_id(), se);
-
 			getScheduleEventList(user);
 			lfapp.saveSchedule(schedule_data);
 
@@ -299,8 +297,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		}
 
 		update_time_slots_data();
-		schedule_adapter = new ScheduleListAdapter(this, time_slots_data,
-				schedule_data);
+		schedule_adapter = new ScheduleListAdapter(this, time_slots_data, lfapp);
 
 		schedule_listView = (ListView) findViewById(R.id.schedule_list);
 		schedule_listView.setAdapter(schedule_adapter);
@@ -665,12 +662,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							//group_check_states.add(false);
 						}
 						
-						friendListView.setAdapter(mAdapter);
-						//mAdapter.notifyDataSetChanged();
-						friendListView = (ExpandableListView) findViewById(android.R.id.list);
-						friendListView.expandGroup(2);
-						//showToast("Friends Added From DB!");
-						showToast( "Output:" + output.toString());
+						showToast("Added New Friend!");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -823,7 +815,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String friend = input.getText().toString().trim();
 						String message = "Friend Request sent to:" + friend;
-						 addNewFriend(friend);
+						addNewFriend(friend);
 						//HashMap<String, String> curChildMap = new HashMap<String, String>();
 						//childData.get(2).add(curChildMap);
 						//curChildMap.put(CHILD, friend);
