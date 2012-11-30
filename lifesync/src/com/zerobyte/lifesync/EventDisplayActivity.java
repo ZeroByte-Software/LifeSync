@@ -132,6 +132,13 @@ public class EventDisplayActivity extends FragmentActivity {
 					is_own_event = true;
 				} else {
 					eventOwner.setText("Other");
+					
+					for (User u: lfapp.getFriendlist()) {
+						if (u.getUserid() == se.getEvent_owner()) {
+							eventOwner.setText(u.getFirst_name() + " " + u.getLast_name());
+							break;
+						}
+					}
 //					eventOwner.setText(se.getEvent_owner());
 					is_own_event = false;
 				}

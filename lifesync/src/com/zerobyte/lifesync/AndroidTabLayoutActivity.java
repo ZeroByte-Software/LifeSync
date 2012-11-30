@@ -308,7 +308,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		schedule_listView.setAdapter(schedule_adapter);
 
 		// FRIEND LIST LOGIC
-		
+		friendlist = new ArrayList<User>(lfapp.getFriendlist());
 		
 		groupData = new ArrayList<Map<String, String>>();
 
@@ -513,8 +513,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 				if (status == HTTP_OK) {
 
-					friendlist = new ArrayList<User>();
-
 					String output = httpResponse.getBodyAsString();
 					try {
 						JSONArray friend = new JSONArray(output);
@@ -539,6 +537,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							childData.get(1).add(curChildMap);
 							curChildMap.put(CHILD, output2);
 							friendlist.add(userFriend);
+							lfapp.saveFriendlist(friendlist);
 							group_check_states.add(false);
 						}
 
@@ -679,7 +678,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						e.printStackTrace();
 					}
 				} else {
-					showToast("Cannot get pendingfriendlist. Please try again.");
+					showToast("Cannot add new friend. Please try again.");
 				}
 			}
 
@@ -930,6 +929,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				viewHolder.button.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
+						addNewFriend(ARfriendlist.get(childPosition).getEmail());
 
 						HashMap<String, String> curChildMap = new HashMap<String, String>();
 						childData.get(1).add(curChildMap);
@@ -942,6 +942,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						
 						// Move from ARfriendlist to friendlist
 						friendlist.add(ARfriendlist.get(childPosition));
+						lfapp.saveFriendlist(friendlist);
 						ARfriendlist.remove(childPosition);
 						
 						
@@ -1035,6 +1036,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 										
 										removeFriendSchedule(friendlist.get(childPosition));
 										friendlist.remove(childPosition);
+										lfapp.saveFriendlist(friendlist);
 										mAdapter.notifyDataSetChanged();
 										
 										showToast("Friend removed.");
