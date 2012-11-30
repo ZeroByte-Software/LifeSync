@@ -182,54 +182,22 @@ public class EventDisplayActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.editEvent_option:
 			// LOGIC TO EDIT EVENT
-			final Intent EditEventIntent = new Intent(EventDisplayActivity.this,
+			Intent EditEventIntent = new Intent(EventDisplayActivity.this,
 					EventInputActivity.class);
-			final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
-			
 			int currentPage = mPager.getCurrentItem();
-			final ScheduleEvent se = schedule_data.get(schedule_id_list.get(currentPage));
-			
-			// Map for HTTP client to perform remote changes
-			ParameterMap params = httpClient.newParams();
-			params.add("event_id", "" + se.getEvent_id());
-			params.add("event_name", se.getEvent_name());
-			params.add("event_start_time", se.getEvent_start_time());
-			params.add("event_end_time", se.getEvent_end_time());
-			params.add("event_location", se.getEvent_location());
-			params.add("event_description", se.getEvent_description());
-			
-			httpClient.post("/editEvent", params, new AsyncCallback() {
-				@Override
-				public void onComplete(HttpResponse httpResponse) {
-					int status = httpResponse.getStatus();
+			ScheduleEvent se = schedule_data.get(schedule_id_list.get(currentPage));
 
-					if (status == httpClient.HTTP_OK)
-					{
-						// Map for local changes
-						HashMap<String, String> event_data = new HashMap<String, String>();
-						event_data.put("event_name", se.getEvent_name());
-						event_data.put("event_start_time", se.getEvent_start_time());
-						event_data.put("event_end_time", se.getEvent_end_time());
-						event_data.put("event_location", se.getEvent_location());
-						event_data.put("event_description", se.getEvent_description());
-						EditEventIntent.putExtra("event_data", event_data);
-						startActivityForResult(EditEventIntent, EDIT_EVENT);
-						
-						showToast( "Event successfully edited!");
-						onBackPressed();
-					}
-					else {
-						showToast("Error editing event.");
-					}
-				}
+			HashMap<String, String> event_data = new HashMap<String, String>();
+			event_data.put( "event_id", "" + se.getEvent_id() );
+			event_data.put("event_name", se.getEvent_name());
+			event_data.put("event_start_time", se.getEvent_start_time());
+			event_data.put("event_end_time", se.getEvent_end_time());
+			event_data.put("event_location", se.getEvent_location());
+			event_data.put("event_description", se.getEvent_description());
+			EditEventIntent.putExtra("event_data", event_data);
+			startActivityForResult(EditEventIntent, EDIT_EVENT);
 
-				@Override
-				public void onError(Exception e) {
-					showToast( "Sorry, a server error occurred. Please try again. " );
-					showToast( e.getMessage() );
-					e.printStackTrace();
-				}
-			});
+			return true;
 
 		case R.id.deleteEvent_option:
 			// LOGIC TO DELETE EVENT
