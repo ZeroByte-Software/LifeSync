@@ -1,6 +1,6 @@
 /* LifeSyncActivityBase.java
  * 
- * Base activity class for Lifesync
+ * Base activity class for LifeSync
  * 
  */
 
@@ -22,7 +22,6 @@ public class LifeSyncActivityBase extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
 		// Get handler to Application and user

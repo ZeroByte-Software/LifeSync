@@ -19,6 +19,10 @@ package com.zerobyte.lifesync;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
+
 import com.zerobyte.lifesync.model.User;
 
 import android.app.AlertDialog;
@@ -31,10 +35,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Demonstrates a "screen-slide" animation using a {@link ViewPager}. Because
@@ -202,13 +208,43 @@ public class EventDisplayActivity extends FragmentActivity {
 			builder.setPositiveButton("Delete",
 					new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int which) {
-							int currentPage = mPager.getCurrentItem();
-							schedule_data.remove(schedule_id_list.get(currentPage));
-//							schedule_id_list.remove(currentPage);
-//							mPager.removeViewAt(currentPage);
-							lfapp.saveSchedule(schedule_data);
+							final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+							ParameterMap params = httpClient.newParams();
+							final int currentPage = mPager.getCurrentItem();
+							ScheduleEvent se = schedule_data.get(schedule_id_list.get(currentPage));
+							int eventID = se.getEvent_id();
 							
-							onBackPressed();
+							params.add("event_id", "" + eventID);
+							
+							httpClient.post("/removeEvent", params, new AsyncCallback() {
+								@Override
+								public void onComplete(HttpResponse httpResponse) {
+									int status = httpResponse.getStatus();
+				
+									if (status == httpClient.HTTP_OK)
+									{
+										showToast( "Event successfully removed!");
+										schedule_data.remove(schedule_id_list.get(currentPage));
+										lfapp.saveSchedule(schedule_data);
+										onBackPressed();
+									}
+									else {
+										showToast("Error removing event.");
+									}
+								}
+				
+								@Override
+								public void onError(Exception e) {
+									showToast( "Sorry, a server error occurred. Please try again. " );
+									showToast( e.getMessage() );
+									e.printStackTrace();
+								}
+							});
+							
+							
+							// schedule_id_list.remove(currentPage);
+							//mPager.removeViewAt(currentPage);
+
 						}
 					});
 			AlertDialog alert = builder.create();
@@ -285,5 +321,14 @@ public class EventDisplayActivity extends FragmentActivity {
 	// Pass to for fragment
 	public ArrayList<Integer> get_schedule_id_list() {
 		return schedule_id_list;
+	}
+	
+	private void showToast(String text) {
+		Toast toast = Toast.makeText(getApplicationContext(),
+				"", Toast.LENGTH_SHORT);
+		toast.setGravity(Gravity.BOTTOM, 0, 0);
+		toast.setText(text);
+		
+		toast.show();
 	}
 }
