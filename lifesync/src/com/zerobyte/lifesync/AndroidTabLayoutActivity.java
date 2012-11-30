@@ -147,7 +147,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							.getByteArrayExtra("data")).split(":")[1]);
 					
 					// TODO add friend using myBumpRcvdEmail
-					// addNewFriend(myBumpRcvdEmail) ??
+					addNewFriend(myBumpRcvdEmail);
 					
 				} else if (action.equals(BumpAPIIntents.MATCHED)) {
 					long channelID = intent
