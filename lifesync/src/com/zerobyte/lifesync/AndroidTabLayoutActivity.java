@@ -729,13 +729,13 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							String get_time[];
 							
 							HashMap<String, String> day_of_week_map = new HashMap<String, String>();
-							day_of_week_map.put("Mon", "0");
-							day_of_week_map.put("Tue", "1");
-							day_of_week_map.put("Wed", "2");
-							day_of_week_map.put("Thu", "3");
-							day_of_week_map.put("Fri", "4");
-							day_of_week_map.put("Sat", "5");
-							day_of_week_map.put("Sun", "6");
+							day_of_week_map.put("Sun", "0");
+							day_of_week_map.put("Mon", "1");
+							day_of_week_map.put("Tue", "2");
+							day_of_week_map.put("Wed", "3");
+							day_of_week_map.put("Thu", "4");
+							day_of_week_map.put("Fri", "5");
+							day_of_week_map.put("Sat", "6");
 
 							Date date = inFomatter.parse(event_start_time);
 							get_time = outFormatter.format(date).split("-");
