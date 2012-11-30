@@ -185,29 +185,14 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 				break;
 			} 
 			
-			
-			
 			if (edit_event_id == null) {
 				// ADDING NEW NOT EDITING
 				final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 				ParameterMap params = httpClient.newParams();
 				
-				String startDateTime, endDateTime;
 				
-				// Using dummy date since we never actually use specific dates, only days of the week.
-				// Nov. 18, 2012 = Sunday, Nov. 24, 2012 = Saturday, etc.
-				startDateTime = "2012-11-" + (start_day_pos + 18) + " ";
-				endDateTime = "2012-11-" + (end_day_pos + 18) + " ";
-				if( start_time_pos < 10 ) {
-					startDateTime += "0" + start_time_pos + ":00:00";	// Time format: 0x:00:00
-				} else {
-					startDateTime += start_time_pos + ":00:00";	// Time format: xx:00:00
-				}
-				if( end_time_pos < 10 ) {
-					endDateTime += "0" + end_time_pos + ":00:00";
-				} else {
-						endDateTime += end_time_pos + ":00:00";
-				}
+				String startDateTime = dateTimeConverter( start_day_pos, start_time_pos );
+				String endDateTime = dateTimeConverter( end_day_pos, end_time_pos );
 				
 				params.add("user_id", "" + user.getUserid());
 				params.add("event_name", ((EditText) findViewById(R.id.event_name)).getText().toString());
@@ -263,11 +248,45 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 					}
 				});
 			} else {
-				event_data.put("event_id", edit_event_id);
-				Intent resultIntent = new Intent();
-				resultIntent.putExtra("event_data", event_data);
-				setResult(RESULT_OK, resultIntent);
-				finish();
+				final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+				
+				String startDateTime = dateTimeConverter( start_day_pos, start_time_pos );
+				String endDateTime = dateTimeConverter( end_day_pos, end_time_pos );
+				
+				ParameterMap params = httpClient.newParams();	// Map for HTTP client to perform remote changes
+				params.add( "event_id", "" + edit_event_id );
+				params.add( "event_name", event_data.get("event_name") );
+				params.add( "event_start_time", startDateTime );
+				params.add( "event_end_time", endDateTime );
+				params.add( "event_location", event_data.get("event_location") );
+				params.add( "event_description", event_data.get("event_description") );
+				
+				httpClient.post("/editEvent", params, new AsyncCallback() {
+					@Override
+					public void onComplete(HttpResponse httpResponse) {
+						int status = httpResponse.getStatus();
+
+						if (status == httpClient.HTTP_OK)
+						{
+							showToast( "Event successfully edited!");
+							
+							Intent resultIntent = new Intent();
+							resultIntent.putExtra("event_data", event_data);
+							setResult(RESULT_OK, resultIntent);
+							finish();
+						}
+						else {
+							showToast("Error editing event.");
+						}
+					}
+
+					@Override
+					public void onError(Exception e) {
+						showToast( "Sorry, a server error occurred. Please try again. " );
+						showToast( e.getMessage() );
+						e.printStackTrace();
+					}
+				});
 			}
 			break;
 
@@ -282,6 +301,24 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 		}
 
 		return true;
+	}
+
+	/*
+	 * Formats day and time to yyyy/mm/dd hh:mm:ss to be compatiable with database
+	 */
+	private String dateTimeConverter(int day_pos, int time_pos) {
+		// Using dummy date since we never actually use specific dates, only days of the week.
+		// Nov. 18, 2012 = Sunday, Nov. 24, 2012 = Saturday, etc.
+		
+		String dateTime;
+		dateTime = "2012-11-" + (day_pos + 18) + " ";
+		if( time_pos < 10 ) {
+			dateTime += "0" + time_pos + ":00:00";	// Time format: 0x:00:00
+		} else {
+			dateTime += time_pos + ":00:00";	// Time format: xx:00:00
+		}
+
+		return dateTime;
 	}
 
 	public void onItemSelected(AdapterView<?> parent, View view, int pos,

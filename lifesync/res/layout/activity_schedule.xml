@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Mon"
+            android:text="@string/mondayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -28,7 +28,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Tue"
+            android:text="@string/tuesdayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -36,7 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Wed"
+            android:text="@string/wednesdayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Thu"
+            android:text="@string/thursdayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -52,7 +52,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Fri"
+            android:text="@string/fridayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -60,7 +60,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Sat"
+            android:text="@string/saturdayShort"
             tools:context=".ScheduleActivity" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="Sun"
+            android:text="@string/sundayShort"
             tools:context=".ScheduleActivity" />
     </LinearLayout>
 
