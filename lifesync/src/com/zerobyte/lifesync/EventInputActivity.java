@@ -270,9 +270,9 @@ public class EventInputActivity extends LifeSyncActivityBase implements
 						{
 							showToast( "Event successfully edited!");
 							
-							//Intent resultIntent = new Intent();
-							//resultIntent.putExtra("event_data", event_data);
-							//setResult(RESULT_OK, resultIntent);
+							Intent resultIntent = new Intent();
+							resultIntent.putExtra("event_data", event_data);
+							setResult(RESULT_OK, resultIntent);
 							finish();
 						}
 						else {
