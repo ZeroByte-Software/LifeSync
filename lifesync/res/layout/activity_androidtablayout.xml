@@ -41,49 +41,49 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Sun" />
+                        android:text="@string/sundayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Mon" />
+                        android:text="@string/mondayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Tue" />
+                        android:text="@string/tuesdayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Wed" />
+                        android:text="@string/wednesdayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Thu" />
+                        android:text="@string/thursdayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Fri" />
+                        android:text="@string/fridayShort" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Sat" />
+                        android:text="@string/saturdayShort" />
                 </LinearLayout>
 
                 <ListView
@@ -125,14 +125,14 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="15dp"
                     android:gravity="center"
-                    android:text="Disabled" />
+                    android:text="@string/disabled" />
 
                 <Button
                     android:id="@+id/btnBump"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="Bump" />
+                    android:text="@string/bump" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="15dp"
                     android:gravity="center"
-                    android:text="Bump to add your friend as a contact!" />
+                    android:text="@string/bumpDetails" />
             </RelativeLayout>
         </FrameLayout>
     </LinearLayout>

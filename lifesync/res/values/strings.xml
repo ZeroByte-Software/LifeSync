@@ -53,5 +53,25 @@
         <string name="editTxtConfirmPassword">Confirm Password</string>
         <string name="dialogLoggingOut">Are you sure you want to log out?</string>
         <string name="cancel">Cancel</string>
+        <string name="sundayShort">Sun</string>
+        <string name="mondayShort">Mon</string>
+        <string name="tuesdayShort">Tue</string>
+        <string name="wednesdayShort">Wed</string>
+        <string name="thursdayShort">Thur</string>
+        <string name="fridayShort">Fri</string>
+        <string name="saturdayShort">Sat</string>
+        <string name="name">Name</string>
+        <string name="from">FROM</string>
+        <string name="to">TO</string>
+        <string name="location">"Location "</string>
+        <string name="description">Description</string>
+        <string name="startTime">Start Time</string>
+        <string name="endTime">End Time</string>
+        <string name="owner">Owner</string>
+        <string name="disabled">Disabled</string>
+        <string name="bump">Bump</string>
+        <string name="bumpDetails">Bump to add your friend as a contact!</string>
+        <string name="confirm">Confirm</string>
+        <string name="deny">Deny</string>
 
 </resources>

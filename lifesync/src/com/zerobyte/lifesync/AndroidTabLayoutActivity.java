@@ -75,10 +75,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 	List<ArrayList<TimeSlot>> time_slots_data;
 
 	// FRIEND LIST VARIABLES
-	final private String SERVER_URL = "http://54.245.83.84:8080/FBWebServer/android";
-	final private int MAX_TIMEOUT = 5000;
-	final private int MAX_RETRIES = 1;
-	final private int HTTP_OK = 200;
 	private static final String GROUP = "GROUP";
 	private static final String CHILD = "CHILD";
 
@@ -431,7 +427,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 	}
 	private void getARFriendList(String email) {
-		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", email);
@@ -443,7 +439,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			public void onComplete(HttpResponse httpResponse) {
 				int status = httpResponse.getStatus();
 
-				if (status == HTTP_OK) {
+				if (status == httpClient.HTTP_OK) {
 
 					ARfriendlist = new ArrayList<User>();
 
@@ -494,7 +490,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 	}
 
 	private void getFriendList(String email) {
-		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", email);
@@ -506,7 +502,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			public void onComplete(HttpResponse httpResponse) {
 				int status = httpResponse.getStatus();
 
-				if (status == HTTP_OK) {
+				if (status == httpClient.HTTP_OK) {
 
 					String output = httpResponse.getBodyAsString();
 					try {
@@ -556,7 +552,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 	}
 	
 	private void getPendFriendList(String email) {
-		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", email);
@@ -568,7 +564,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			public void onComplete(HttpResponse httpResponse) {
 				int status = httpResponse.getStatus();
 
-				if (status == HTTP_OK) {
+				if (status == httpClient.HTTP_OK) {
 
 					pendfriendlist = new ArrayList<User>();
 
@@ -618,7 +614,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 	}
 	private void addNewFriend(String friendemail) {
-		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", user.getEmail());
@@ -631,7 +627,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			public void onComplete(HttpResponse httpResponse) {
 				int status = httpResponse.getStatus();
 
-				if (status == HTTP_OK) {
+				if (status == httpClient.HTTP_OK) {
 
 
 					String output = httpResponse.getBodyAsString();
@@ -680,7 +676,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 	}
 	private void getScheduleEventList(User queryuser) {
-		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", queryuser.getEmail());
@@ -693,7 +689,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			public void onComplete(HttpResponse httpResponse) {
 				int status = httpResponse.getStatus();
 
-				if (status == HTTP_OK) {
+				if (status == httpClient.HTTP_OK) {
 					ArrayList<ScheduleEvent> eventList= new ArrayList<ScheduleEvent>();
 					
 					try {
