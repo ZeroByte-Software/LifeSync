@@ -1,9 +1,9 @@
 package com.zerobyte.lifesync;
 
-import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +27,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -56,7 +55,6 @@ import com.bump.api.IBumpAPI;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-import com.turbomanage.httpclient.android.AndroidHttpClient;
 import com.zerobyte.lifesync.model.User;
 
 public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
