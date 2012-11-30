@@ -1067,14 +1067,17 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			if (requestCode == ADD_EVENT) {
 				HashMap<String, String> event_data = (HashMap<String, String>) data
 						.getSerializableExtra("event_data");
+				int eventID = Integer.parseInt( event_data.get("event_id") );
 				ScheduleEvent se = new ScheduleEvent(
 						event_data.get("event_name"),
 						event_data.get("event_start_time"),
 						event_data.get("event_end_time"),
 						event_data.get("event_location"),
-						event_data.get("event_description"), user.getUserid(), -1);
+						event_data.get("event_description"),
+						user.getUserid(),
+						eventID );
 
-				schedule_data.put(se.getEvent_id(), se);
+				schedule_data.put(eventID, se);
 				// update_time_slots_data();
 			}
 
