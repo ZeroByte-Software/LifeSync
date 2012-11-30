@@ -89,8 +89,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 	private ExpandableListView friendListView;
 	private MyExpandableListAdapter mAdapter;
 
-	private ArrayList<Map<String, String>> groupData = new ArrayList<Map<String, String>>();
-	private ArrayList<ArrayList<Map<String, String>>> childData = new ArrayList<ArrayList<Map<String, String>>>();
+	private ArrayList<Map<String, String>> groupData;
+	private ArrayList<ArrayList<Map<String, String>>> childData = new ArrayList<ArrayList<Map<String,String>>>();
+	private ArrayList<User> friendlist;
+	private ArrayList<User> ARfriendlist;
+	private ArrayList<User> pendfriendlist;
 	private ArrayList<Boolean> group_check_states = null;
 
 	// BUMP VARIABLES
@@ -386,8 +389,9 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		friendListView = (ExpandableListView) findViewById(android.R.id.list);
 		friendListView.setAdapter(mAdapter);
 		friendListView.expandGroup(1);
+		getPendFriendList(user.getEmail());
 		getFriendList(user.getEmail());
-
+		getARFriendList(user.getEmail());
 		// BUMP LOGIC GOES HERE
 		final Button bumpbtn = (Button) findViewById(R.id.btnBump);
 		bumpbtn.setOnClickListener(new View.OnClickListener() {
@@ -427,14 +431,9 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 
 	}
-
-	private void getFriendList(String email) {
-		AndroidHttpClient httpClient = new AndroidHttpClient(SERVER_URL);
+	private void getARFriendList(String email) {
+		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
-
-		httpClient.setConnectionTimeout(MAX_TIMEOUT);
-		httpClient.setReadTimeout(MAX_TIMEOUT);
-		httpClient.setMaxRetries(MAX_RETRIES);
 
 		params.add("email", email);
 		// params.add( "password", password );
@@ -447,18 +446,99 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 				if (status == HTTP_OK) {
 
-					
+					ARfriendlist = new ArrayList<User>();
 
 					String output = httpResponse.getBodyAsString();
 					try {
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.getJSONArray(2).length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONArray(2).getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONArray(2).getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONArray(2).getJSONObject(i).getString("last_name");
+							email = friend.getJSONArray(2).getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+							String output2 = first_name + " " + last_name;
+							
+							HashMap<String, String> curChildMap = new HashMap<String, String>();
+							childData.get(0).add(curChildMap);
+							curChildMap.put(CHILD, output2);
+							ARfriendlist.add(userFriend);
+							//group_check_states.add(false);
+						}
 						
-						JSONArray jobj = new JSONArray(output);
-						for (int i = 0; i < jobj.length(); i++) {
-							// showToast( "Output:" + jobj.getString(i));
-							output = jobj.getString(i);
+						friendListView.setAdapter(mAdapter);
+						friendListView = (ExpandableListView) findViewById(android.R.id.list);
+						friendListView.expandGroup(1);
+						showToast( "Output:" + output.toString());
+						showToast("Friends Added From DB!");
+						
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot get ARfriendlist. Please try again.");
+				}
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+
+	private void getFriendList(String email) {
+		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
+
+		params.add("email", email);
+		// params.add( "password", password );
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendlist", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+
+				if (status == HTTP_OK) {
+
+					friendlist = new ArrayList<User>();
+
+					String output = httpResponse.getBodyAsString();
+					try {
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.getJSONArray(0).length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONArray(0).getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONArray(0).getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONArray(0).getJSONObject(i).getString("last_name");
+							email = friend.getJSONArray(0).getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+							String output2 = first_name + " " + last_name;
+							
 							HashMap<String, String> curChildMap = new HashMap<String, String>();
 							childData.get(1).add(curChildMap);
-							curChildMap.put(CHILD, output);
+							curChildMap.put(CHILD, output2);
+							friendlist.add(userFriend);
 							group_check_states.add(false);
 						}
 						
@@ -466,6 +546,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						friendListView = (ExpandableListView) findViewById(android.R.id.list);
 						friendListView.expandGroup(1);
 						showToast("Friends Added From DB!");
+						//showToast( "Output:" + output.toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -483,13 +564,141 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 	}
 	
-	private void getScheduleEventList(User queryuser) {
-		AndroidHttpClient httpClient = new AndroidHttpClient(SERVER_URL);
+	private void getPendFriendList(String email) {
+		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
-		httpClient.setConnectionTimeout(MAX_TIMEOUT);
-		httpClient.setReadTimeout(MAX_TIMEOUT);
-		httpClient.setMaxRetries(MAX_RETRIES);
+		params.add("email", email);
+		// params.add( "password", password );
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendlist", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+
+				if (status == HTTP_OK) {
+
+					pendfriendlist = new ArrayList<User>();
+
+					String output = httpResponse.getBodyAsString();
+					try {
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.getJSONArray(1).length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONArray(1).getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONArray(1).getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONArray(1).getJSONObject(i).getString("last_name");
+							email = friend.getJSONArray(1).getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+							String output2 = first_name + " " + last_name;
+							
+							HashMap<String, String> curChildMap = new HashMap<String, String>();
+							childData.get(2).add(curChildMap);
+							curChildMap.put(CHILD, output2);
+							pendfriendlist.add(userFriend);
+							//group_check_states.add(false);
+						}
+						
+						friendListView.setAdapter(mAdapter);
+						friendListView = (ExpandableListView) findViewById(android.R.id.list);
+						friendListView.expandGroup(1);
+						showToast("Friends Added From DB!");
+						//showToast( "Output:" + output.toString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot get pendingfriendlist. Please try again.");
+				}
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+	private void addNewFriend(String friendemail) {
+		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
+
+		params.add("email", user.getEmail());
+		params.add("friendemail", friendemail);
+		// params.add( "password", password );
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendAdd/new", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+
+				if (status == HTTP_OK) {
+
+
+					String output = httpResponse.getBodyAsString();
+					try {
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONObject(i).getString("last_name");
+							email = friend.getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+							String output2 = first_name + " " + last_name;
+							
+							HashMap<String, String> curChildMap = new HashMap<String, String>();
+							childData.get(2).add(curChildMap);
+							curChildMap.put(CHILD, output2);
+							ARfriendlist.add(userFriend);
+							
+							//group_check_states.add(false);
+						}
+						
+						friendListView.setAdapter(mAdapter);
+						//mAdapter.notifyDataSetChanged();
+						friendListView = (ExpandableListView) findViewById(android.R.id.list);
+						friendListView.expandGroup(1);
+						//showToast("Friends Added From DB!");
+						showToast( "Output:" + output.toString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot get pendingfriendlist. Please try again.");
+				}
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+	private void getScheduleEventList(User queryuser) {
+		LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
 
 		params.add("email", queryuser.getEmail());
 		
@@ -502,7 +711,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				int status = httpResponse.getStatus();
 
 				if (status == HTTP_OK) {
-					ArrayList<ScheduleEvent> eventList= new ArrayList<ScheduleEvent>();
 					
 					try {
 						JSONArray event = new JSONArray(httpResponse.getBodyAsString());
@@ -523,7 +731,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							event_description = event.getJSONObject(i).getString("description");
 							
 							SimpleDateFormat inFomatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:sss");
-							SimpleDateFormat outFormatter = new SimpleDateFormat("EEE-hh");
+							SimpleDateFormat outFormatter = new SimpleDateFormat("EEE-HH");
 							String get_time[];
 							
 							HashMap<String, String> day_of_week_map = new HashMap<String, String>();
@@ -613,7 +821,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 		return super.onOptionsItemSelected(item);
 	}
-
+	
 	private void showAddFriendPopUp() {
 
 		final AlertDialog.Builder friendBuilder = new AlertDialog.Builder(this);
@@ -628,9 +836,10 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String friend = input.getText().toString().trim();
 						String message = "Friend Request sent to:" + friend;
-						HashMap<String, String> curChildMap = new HashMap<String, String>();
-						childData.get(2).add(curChildMap);
-						curChildMap.put(CHILD, friend);
+						 addNewFriend(friend);
+						//HashMap<String, String> curChildMap = new HashMap<String, String>();
+						//childData.get(2).add(curChildMap);
+						//curChildMap.put(CHILD, friend);
 						Toast.makeText(getApplicationContext(), message,
 								Toast.LENGTH_SHORT).show();
 						mAdapter.notifyDataSetChanged();
@@ -732,22 +941,13 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 					public void onClick(View v) {
 
-						// childData.get(groupPosition).get(childPosition).put(IS_EVEN,
-						// "Friend Confirmed");
-						// childData.get(0).get(0).put(IS_EVEN, "New Friend");
 						HashMap<String, String> curChildMap = new HashMap<String, String>();
 						childData.get(1).add(curChildMap);
-						// childData.get(groupPosition).get(childPosition).put(IS_EVEN,
-						// "Friend Confirmed");
 						curChildMap.put(
 								CHILD,
 								(String) mChildData.get(groupPosition)
 										.get(childPosition).get(mChildFrom[1]));
 						childData.get(0).remove(childPosition);
-						// childData.get(1).get(0).put(IS_EVEN,
-						// (String)childData.get(mGroupPosition).get(mChildPosition).get(mChildFrom[1]));
-						// TextView tv=(TextView)findViewById(R.id.label);
-						// tv.setText("Clicked");
 						group_check_states.add(false);
 						mAdapter.notifyDataSetChanged();
 						
@@ -786,32 +986,21 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 							public void onCheckedChanged(
 									CompoundButton buttonView, boolean isChecked) {
-								// TODO Auto-generated method stub
-								// Model element = (Model)
-								// viewHolder1.checkbox.getTag();
-								// element.setSelected(buttonView.isChecked());
-								// if(buttonView.isChecked())
-								// viewHolder1.checkbox.setChecked(true);
-								// else
-								// viewHolder1.checkbox.setChecked(false);
+
 								if (viewHolder1.checkbox.isChecked()) {
 									group_check_states.set(childPosition, true);
-									
-									User friend_user = new User();
-									friend_user.setEmail("b@b.b");
-									friend_user.setUserid(81);
-									getScheduleEventList(friend_user);
+
+									getScheduleEventList(friendlist.get(childPosition));
 									
 								} else {
 									group_check_states
 											.set(childPosition, false);
 									
-									User friend_user = new User();
-									friend_user.setUserid(81);
-									removeFriendSchedule(friend_user);
+	
+									removeFriendSchedule(friendlist.get(childPosition));
 								}
 
-								// mAdapter.notifyDataSetChanged();
+		
 							}
 						});
 
@@ -821,8 +1010,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				ViewHolder holder1 = (ViewHolder) view.getTag();
 				holder1.text.setText((String) mChildData.get(groupPosition)
 						.get(childPosition).get(mChildFrom[1]));
-				// holder1.checkbox.setChecked(((View)
-				// mChildData.get(groupPosition).get(childPosition)).isSelected());
 				break;
 
 			case 2:
@@ -986,7 +1173,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			Iterator it = schedule_data.entrySet().iterator();
 			while (it.hasNext()) {
 		        Map.Entry pairs = (Map.Entry) it.next();
-		        if (((ScheduleEvent) pairs.getValue()).getEvent_owner() != user.getUserid()) {
+		        if (((ScheduleEvent) pairs.getValue()).getEvent_owner() == friend_user.getUserid()) {
 		        	it.remove();
 		        }
 		    }

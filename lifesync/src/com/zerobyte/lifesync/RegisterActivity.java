@@ -146,7 +146,7 @@ public class RegisterActivity extends LifeSyncActivityBase {
             builder.setMessage(R.string.dialogDuplicateEmail)
                    .setNeutralButton(R.string.ok, new DialogInterface.OnClickListener() {
                        public void onClick(DialogInterface dialog, int id) {
-                           // Do nothing but close dialog
+                           dialog.dismiss();
                        }
                    });
             // Create the AlertDialog object and return it

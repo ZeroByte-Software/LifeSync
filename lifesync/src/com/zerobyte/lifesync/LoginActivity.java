@@ -41,14 +41,14 @@ public class LoginActivity extends LifeSyncActivityBase {
 				else
 					login(email, password);
 				
-				login("a@a.a", "a");
+				//login("a@a.a", "a");
 			}
 		});
 
 		Button registerButton = (Button) findViewById(R.id.btnRegister);
 		registerButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				login("b@b.b", "b");
+				//login("b@b.b", "b");
 				
 				Intent registerIntent = new Intent(LoginActivity.this,
 						RegisterActivity.class);
