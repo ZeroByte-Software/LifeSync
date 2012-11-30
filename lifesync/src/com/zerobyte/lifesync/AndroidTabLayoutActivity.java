@@ -1041,6 +1041,9 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 										HashMap<String, String> curChildMap = new HashMap<String, String>();
 										childData.get(1).remove(childPosition);
 										group_check_states.remove(childPosition);
+										
+										removeFriendSchedule(friendlist.get(childPosition));
+										friendlist.remove(childPosition);
 										mAdapter.notifyDataSetChanged();
 										
 										showToast("Friend removed.");
@@ -1048,10 +1051,6 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 								});
 						AlertDialog alert = builder.create();
 						alert.show();
-						
-						
-						
-						
 						return true;
 					}
 				});
