@@ -1043,10 +1043,10 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			case 2:
 				LayoutInflater inflater2 = getLayoutInflater();
 				view = inflater2.inflate(
-						android.R.layout.simple_expandable_list_item_2, null);
+						R.layout.row_layout_3, null);
 				final ViewHolder viewHolder2 = new ViewHolder();
 				viewHolder2.text = (TextView) view
-						.findViewById(android.R.id.text2);
+						.findViewById(R.id.label3);
 				view.setTag(viewHolder2);
 				ViewHolder holder2 = (ViewHolder) view.getTag();
 				holder2.text.setText((String) mChildData.get(groupPosition)
