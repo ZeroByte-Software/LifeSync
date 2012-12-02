@@ -41,7 +41,7 @@ public class LoginActivity extends LifeSyncActivityBase {
 				else
 					login(email, password);
 				
-				//login("a@a.a", "a");
+				//login("wonderful@gmail.com", "checking");
 			}
 		});
 
