@@ -141,10 +141,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							.getByteArrayExtra("data")).split(":")[1]);
 					
 					// TODO add friend using myBumpRcvdEmail
-					addNewFriend(myBumpRcvdEmail);
+					addFriendviaBump(myBumpRcvdEmail);
+					showToast(myBumpRcvdEmail);
 					
-					mAdapter.notifyDataSetChanged();
-					showToast("New Friend Added!");
+					//mAdapter.notifyDataSetChanged();
+					//showToast("New Friend Added!");
 					
 					
 					
@@ -426,12 +427,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 
 	}
-	private void getARFriendList(String email) {
+	private void getPendFriendList(String email) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", email);
-		// params.add( "password", password );
 
 		// Contact server using POST via separate thread
 		httpClient.get("/friendlist", params, new AsyncCallback() {
@@ -441,7 +441,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 				if (status == httpClient.HTTP_OK) {
 
-					ARfriendlist = new ArrayList<User>();
+					pendfriendlist = new ArrayList<User>();
 
 					String output = httpResponse.getBodyAsString();
 					try {
@@ -461,23 +461,22 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							userFriend.setFirst_name(first_name);
 							userFriend.setLast_name(last_name);
 							userFriend.setEmail(email);
-							String output2 = first_name + " " + last_name;
+							String friendname = first_name + " " + last_name;
 							
 							HashMap<String, String> curChildMap = new HashMap<String, String>();
 							childData.get(0).add(curChildMap);
-							curChildMap.put(CHILD, output2);
-							ARfriendlist.add(userFriend);
-							//group_check_states.add(false);
+							curChildMap.put(CHILD, friendname);
+							pendfriendlist.add(userFriend);
 						}
 						
-						showToast("ARFriends Added From DB!");
-						
+						showToast("Pending Friends Added From DB!");
+						//showToast( "Output:" + output.toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					showToast("Cannot get ARfriendlist. Please try again.");
+					showToast("Cannot get pendingfriendlist. Please try again.");
 				}
 			}
 
@@ -488,7 +487,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		});
 	}
-
+	
 	private void getFriendList(String email) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
@@ -503,7 +502,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				int status = httpResponse.getStatus();
 
 				if (status == httpClient.HTTP_OK) {
-
+					friendlist = new ArrayList<User>();
 					String output = httpResponse.getBodyAsString();
 					try {
 						JSONArray friend = new JSONArray(output);
@@ -532,8 +531,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							group_check_states.add(false);
 						}
 
-						showToast("Friends Added From DB!");
-						//showToast( "Output:" + output.toString());
+						//showToast("Friends Added From DB!");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -551,12 +549,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 		});
 	}
 	
-	private void getPendFriendList(String email) {
+	private void getARFriendList(String email) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", email);
-		// params.add( "password", password );
 
 		// Contact server using POST via separate thread
 		httpClient.get("/friendlist", params, new AsyncCallback() {
@@ -566,7 +563,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 
 				if (status == httpClient.HTTP_OK) {
 
-					pendfriendlist = new ArrayList<User>();
+					ARfriendlist = new ArrayList<User>();
 
 					String output = httpResponse.getBodyAsString();
 					try {
@@ -591,18 +588,17 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							HashMap<String, String> curChildMap = new HashMap<String, String>();
 							childData.get(2).add(curChildMap);
 							curChildMap.put(CHILD, output2);
-							pendfriendlist.add(userFriend);
-							//group_check_states.add(false);
+							ARfriendlist.add(userFriend);
 						}
 						
-						showToast("Pending Friends Added From DB!");
-						//showToast( "Output:" + output.toString());
+						showToast("ARFriends Added From DB!");
+						
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				} else {
-					showToast("Cannot get pendingfriendlist. Please try again.");
+					showToast("Cannot get ARfriendlist. Please try again.");
 				}
 			}
 
@@ -613,13 +609,14 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		});
 	}
+	
+	/*This method will add a friend on pending list by specifying the email*/
 	private void addNewFriend(String friendemail) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
 
 		params.add("email", user.getEmail());
 		params.add("friendemail", friendemail);
-		// params.add( "password", password );
 
 		// Contact server using POST via separate thread
 		httpClient.get("/friendAdd/new", params, new AsyncCallback() {
@@ -628,10 +625,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				int status = httpResponse.getStatus();
 
 				if (status == httpClient.HTTP_OK) {
-
-
+					// Retrieve httpResponse as a string
 					String output = httpResponse.getBodyAsString();
 					try {
+						String friendname = "";
+						//Create a new friend array via JSON
 						JSONArray friend = new JSONArray(output);
 						for (int i = 0; i < friend.length(); i++) {
 							int user_id;
@@ -648,17 +646,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 							userFriend.setFirst_name(first_name);
 							userFriend.setLast_name(last_name);
 							userFriend.setEmail(email);
-							String output2 = first_name + " " + last_name;
+							friendname = first_name + " " + last_name;
 							
-							HashMap<String, String> curChildMap = new HashMap<String, String>();
-							childData.get(2).add(curChildMap);
-							curChildMap.put(CHILD, output2);
-							ARfriendlist.add(userFriend);
-							
-							//group_check_states.add(false);
-						}
-						
-						showToast("Added New Friend!");
+							friendlist.add(userFriend);
+						}						
+						showToast("Added New Friend:" + friendname);
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -675,6 +667,180 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 			}
 		});
 	}
+	
+	private void addFriendviaBump(String friendemail) {
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
+
+		params.add("email", user.getEmail());
+		params.add("friendemail", friendemail);
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendAdd", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+
+				if (status == httpClient.HTTP_OK) {
+
+					// Retrieve httpResponse as a string
+					String output = httpResponse.getBodyAsString();
+					try {
+						String friendname = "";
+						//Create a new friend array via JSON
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+							String email;
+							user_id = friend.getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONObject(i).getString("last_name");
+							email = friend.getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+							friendname = first_name + " " + last_name;
+							
+							friendlist.add(userFriend);
+						}						
+						showToast("Added New Friend:" + friendname);
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot add new friend. Please bump again.");
+				}
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again later.");
+				e.printStackTrace();
+			}
+		});
+	}
+	/*This method will approve a friend on pending list by specifying the email*/
+	private void approveFriend(String friendemail) {
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
+
+
+		params.add("email", user.getEmail());
+		params.add("friendemail", friendemail);
+
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendApprove", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+			
+				if (status ==  httpClient.HTTP_OK) {
+					
+					// Retrieve httpResponse as a string
+					String output = httpResponse.getBodyAsString();
+					try {
+						String friendname ="";
+						//Create a new friend array via JSON
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONObject(i).getString("last_name");
+							email = friend.getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+						}
+						showToast( "Approving Friend:" + friendname );
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot approve friend. Please try again.");
+				}
+	
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+	/*This method will delete a friend on pending list by specifying the email*/
+	private void deleteFriend(String friendemail) {
+		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
+		ParameterMap params = httpClient.newParams();
+
+
+		params.add("email", user.getEmail());
+		params.add("friendemail", friendemail);
+
+
+		// Contact server using POST via separate thread
+		httpClient.get("/friendDelete", params, new AsyncCallback() {
+			@Override
+			public void onComplete(HttpResponse httpResponse) {
+				int status = httpResponse.getStatus();
+			
+				if (status ==  httpClient.HTTP_OK) {
+					
+					// Retrieve httpResponse as a string
+					String output = httpResponse.getBodyAsString();
+					try {
+						String friendname ="";
+						//Create a new friend array via JSON
+						JSONArray friend = new JSONArray(output);
+						for (int i = 0; i < friend.length(); i++) {
+							int user_id;
+							String first_name;
+							String last_name;
+					
+							String email;
+							user_id = friend.getJSONObject(i).getInt("user_id");
+							first_name = friend.getJSONObject(i).getString("first_name");
+							last_name = friend.getJSONObject(i).getString("last_name");
+							email = friend.getJSONObject(i).getString("email");
+							User userFriend = new User();
+							userFriend.setUserid(user_id);
+							userFriend.setFirst_name(first_name);
+							userFriend.setLast_name(last_name);
+							userFriend.setEmail(email);
+						}
+						showToast( "Deleting Friend:" + friendname );
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} else {
+					showToast("Cannot approve friend. Please try again.");
+				}
+	
+			}
+
+			@Override
+			public void onError(Exception e) {
+				showToast("Server error. Please try again.");
+				e.printStackTrace();
+			}
+		});
+	}
+	
 	private void getScheduleEventList(User queryuser) {
 		final LifeSyncHttpClient httpClient = new LifeSyncHttpClient();
 		ParameterMap params = httpClient.newParams();
@@ -811,10 +977,14 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 					public void onClick(DialogInterface dialog, int whichButton) {
 						String friend = input.getText().toString().trim();
 						String message = "Friend Request sent to:" + friend;
+						
+						/*Testing Bump*/
+						//addFriendviaBump(friend);
+						
 						addNewFriend(friend);
-						//HashMap<String, String> curChildMap = new HashMap<String, String>();
-						//childData.get(2).add(curChildMap);
-						//curChildMap.put(CHILD, friend);
+						HashMap<String, String> curChildMap = new HashMap<String, String>();
+						childData.get(2).add(curChildMap);
+						curChildMap.put(CHILD, friend);
 						Toast.makeText(getApplicationContext(), message,
 								Toast.LENGTH_SHORT).show();
 						mAdapter.notifyDataSetChanged();
@@ -915,7 +1085,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 				viewHolder.button.setOnClickListener(new OnClickListener() {
 
 					public void onClick(View v) {
-						addNewFriend(ARfriendlist.get(childPosition).getEmail());
+						approveFriend(pendfriendlist.get(childPosition).getEmail());
 
 						HashMap<String, String> curChildMap = new HashMap<String, String>();
 						childData.get(1).add(curChildMap);
@@ -924,12 +1094,11 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 								(String) mChildData.get(groupPosition)
 										.get(childPosition).get(mChildFrom[1]));
 						childData.get(0).remove(childPosition);
-						group_check_states.add(false);
 						
-						// Move from ARfriendlist to friendlist
-						friendlist.add(ARfriendlist.get(childPosition));
-						lfapp.saveFriendlist(friendlist);
-						ARfriendlist.remove(childPosition);
+						friendlist.add(pendfriendlist.get(childPosition));
+						pendfriendlist.remove(childPosition);
+						group_check_states.add(false);
+						lfapp.saveFriendlist(friendlist);		
 						
 						
 						mAdapter.notifyDataSetChanged();
@@ -1016,6 +1185,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 						builder.setPositiveButton("Delete",
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int which) {
+										deleteFriend(friendlist.get(childPosition).getEmail());
 										HashMap<String, String> curChildMap = new HashMap<String, String>();
 										childData.get(1).remove(childPosition);
 										group_check_states.remove(childPosition);
@@ -1025,7 +1195,7 @@ public class AndroidTabLayoutActivity extends LifeSyncActivityBase {
 										lfapp.saveFriendlist(friendlist);
 										mAdapter.notifyDataSetChanged();
 										
-										showToast("Friend removed.");
+										// showToast("Friend removed.");
 									}
 								});
 						AlertDialog alert = builder.create();
